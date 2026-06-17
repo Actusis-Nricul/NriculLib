@@ -23,26 +23,110 @@ local LocalPlayer = Players.LocalPlayer
 
 -- =====================
 -- ICON FALLBACK (Lucide-name -> glyph)
--- Since this library has no hosted icon spritesheet, names map to
--- text glyphs/emoji as a lightweight fallback. Pass any string name;
--- unmapped names just render blank rather than erroring.
+-- 67 btw subscribe to Actusis rn
 -- =====================
 local IconGlyphs = {
-    home = "⌂", settings = "⚙", gear = "⚙", user = "☺", users = "☺☺",
-    play = "▶", pause = "❚❚", stop = "■", trash = "🗑", search = "🔍",
-    star = "★", heart = "♥", bell = "🔔", lock = "🔒", unlock = "🔓",
-    eye = "👁", zap = "⚡", flame = "🔥", skull = "☠", shield = "🛡",
-    gamepad = "🎮", sword = "⚔", map = "🗺", check = "✓", x = "✕",
+    -- navigation / general
+    home = "⌂", settings = "⚙", gear = "⚙", menu = "☰", grid = "▦",
+    list = "☰", layout = "▣", sidebar = "▤", compass = "🧭", map = "🗺",
+    mappin = "📍", navigation = "🧭", globe = "🌐", world = "🌍",
+
+    -- people
+    user = "☺", users = "☺☺", usercheck = "✓☺", userplus = "+☺",
+    userminus = "-☺", userx = "✕☺", person = "☺", personstanding = "🚶",
+    crown = "♛", baby = "👶",
+
+    -- actions / media
+    play = "▶", pause = "❚❚", stop = "■", skipback = "⏮", skipforward = "⏭",
+    rewind = "◀◀", fastforward = "▶▶", repeat1 = "🔁", shuffle = "🔀",
+    volume = "🔊", volume1 = "🔉", volume2 = "🔊", volumex = "🔇",
+    mic = "🎙", micoff = "🚫🎙", camera = "📷", video = "🎥", videooff = "🚫🎥",
+    music = "🎵", headphones = "🎧",
+
+    -- ui/system
+    trash = "🗑", trash2 = "🗑", search = "🔍", filter = "▼",
+    refresh = "↻", refreshcw = "↻", refreshccw = "↺", rotate = "↻",
+    rotatecw = "↻", rotateccw = "↺", loader = "◐", loader2 = "◑",
+    download = "↓", upload = "↑", save = "💾", share = "↗", share2 = "↗",
+    link = "🔗", link2 = "🔗", unlink = "🔗✕", externallink = "↗",
+    copy = "⧉", clipboard = "📋", clipboardcheck = "✓📋",
+    edit = "✎", edit2 = "✎", edit3 = "✎", pencil = "✎", pen = "✎",
+    pentool = "🖊",
+
+    -- status / feedback
+    check = "✓", checkcircle = "✓", checksquare = "✓", checkcheck = "✓✓",
+    x = "✕", xcircle = "⊗", xsquare = "⊠",
+    plus = "+", pluscircle = "⊕", plussquare = "⊞",
+    minus = "-", minuscircle = "⊖", minussquare = "⊟",
+    info = "ⓘ", help = "?", helpcircle = "?", question = "?",
+    warning = "⚠", alerttriangle = "⚠", alertcircle = "⚠", alertoctagon = "⛔",
+    ban = "⛔", octagonalert = "⛔",
+
+    -- arrows
     arrowup = "↑", arrowdown = "↓", arrowleft = "←", arrowright = "→",
-    plus = "+", minus = "-", info = "ⓘ", warning = "⚠", clock = "🕐",
-    folder = "📁", file = "📄", download = "↓", upload = "↑",
-    key = "🔑", chevronup = "︿", chevrondown = "﹀",
+    arrowupright = "↗", arrowupleft = "↖", arrowdownright = "↘", arrowdownleft = "↙",
+    chevronup = "︿", chevrondown = "﹀", chevronleft = "‹", chevronright = "›",
+    chevronsup = "⇈", chevronsdown = "⇊", chevronsleft = "⇇", chevronsright = "⇉",
+    movevertical = "↕", movehorizontal = "↔", move = "✛",
+    cornerupright = "↱", cornerupleft = "↰", cornerdownright = "↳", cornerdownleft = "↲",
+
+    -- time
+    clock = "🕐", clock1 = "🕐", calendar = "📅", calendardays = "📅",
+    timer = "⏱", hourglass = "⏳", history = "🕓", alarmclock = "⏰",
+
+    -- security
+    lock = "🔒", unlock = "🔓", key = "🔑", keyround = "🔑",
+    shield = "🛡", shieldcheck = "🛡✓", shieldalert = "🛡⚠", shieldoff = "🛡✕",
+    fingerprint = "👆", eye = "👁", eyeoff = "🚫👁", scan = "▢",
+
+    -- files
+    folder = "📁", folderopen = "📂", folderplus = "📁+",
+    file = "📄", filetext = "📄", filecode = "📄", fileplus = "📄+",
+    files = "📑", archive = "🗃", box = "📦", package = "📦",
+    inbox = "📥", database = "🗄", server = "🖥", harddrive = "💽",
+
+    -- communication
+    mail = "✉", mailopen = "📭", send = "➤", messagecircle = "💬",
+    messagesquare = "💬", phone = "📞", phonecall = "📞", bell = "🔔",
+    belloff = "🔕", bellring = "🔔", rss = "📡", wifi = "📶", wifioff = "📵",
+    bluetooth = "🔵",
+
+    -- weather / nature
+    sun = "☀", moon = "🌙", cloud = "☁", cloudrain = "🌧", cloudsnow = "🌨",
+    cloudlightning = "🌩", wind = "🌬", snowflake = "❄", droplet = "💧",
+    droplets = "💧", flame = "🔥", thermometer = "🌡", umbrella = "☂",
+    leaf = "🍃", tree = "🌳", flower = "🌸", sprout = "🌱",
+
+    -- objects
+    star = "★", heart = "♥", heartoff = "🚫♥", bookmark = "🔖",
+    flag = "🏳", flagoff = "🏴", award = "🏅", trophy = "🏆", medal = "🎖",
+    gift = "🎁", target = "🎯", crosshair = "✛", anchor = "⚓",
+    zap = "⚡", zapoff = "⚡✕", battery = "🔋", batterylow = "🪫",
+    plug = "🔌", power = "⏻", powermin = "⏻",
+
+    -- gaming / fantasy
+    sword = "⚔", swords = "⚔", skull = "☠", gamepad = "🎮", gamepad2 = "🎮",
+    dice1 = "⚀", dice5 = "⚄", puzzle = "🧩", joystick = "🕹",
+    rocket = "🚀", ghost = "👻", bug = "🐛", bot = "🤖",
+
+    -- finance
+    dollarsign = "$", creditcard = "💳", wallet = "👛", coins = "🪙",
+    banknote = "💵", piggybank = "🐖", receipt = "🧾", percent = "%",
+
+    -- misc
+    sparkles = "✨", sparkle = "✦", flameicon = "🔥", lightbulb = "💡",
+    palette = "🎨", paintbrush = "🖌", scissors = "✂", ruler = "📏",
+    wrench = "🔧", hammer = "🔨", tool = "🛠", settings2 = "⚙",
+    sliders = "🎛", toggleleft = "◯", toggleright = "⬤",
+    layers = "▤", maximize = "⛶", minimize = "⛶", expand = "⤢", shrink = "⤡",
+    monitor = "🖥", smartphone = "📱", tablet = "📱", laptop = "💻",
+    printer = "🖨", keyboard = "⌨", mouse = "🖱",
 }
 
 local function resolveIconGlyph(icon)
     if not icon or icon == "" then return "" end
     if typeof(icon) == "string" then
-        local glyph = IconGlyphs[icon:lower():gsub("[%-%s]", "")]
+        local glyph = IconGlyphs[icon:lower():gsub("[%-%s_]", "")]
         return glyph or ""
     end
     return ""
