@@ -34,7 +34,8 @@ local IconGlyphs = {
     -- people
     user = "🙂", users = "🙂🙂", usercheck = "✓🙂", userplus = "+🙂",
     userminus = "-🙂", userx = "✕🙂", person = "😀", personstanding = "🚶",
-    crown = "♛", baby = "👶", lift = "🏋️", workout = "🏋️", weight = "🏋️", weightlift = "🏋️", weightlifter = "🏋️",
+    crown = "♛", baby = "👶", lift = "🏋️", workout = "🏋️", weight = "🏋️",
+    weightlift = "🏋️", weightlifter = "🏋️", speed = "🏃", run = "🏃", running = "🏃", spe = "🏃",
 
     -- actions / media
     play = "▶", pause = "❚❚", stop = "■", skipback = "⏮", skipforward = "⏭",
@@ -121,6 +122,7 @@ local IconGlyphs = {
     layers = "▤", maximize = "⛶", minimize = "⛶", expand = "⤢", shrink = "⤡",
     monitor = "🖥️", smartphone = "📱", tablet = "📱", laptop = "💻",
     printer = "🖨", keyboard = "⌨", mouse = "🖱", galaxy = "🌌", xray = "🩻",
+    jump = "🦘", kangaroo = "🦘", hop = "🦘",
 }
 
 local function resolveIconGlyph(icon)
