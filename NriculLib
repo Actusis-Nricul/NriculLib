@@ -32,8 +32,8 @@ local IconGlyphs = {
     mappin = "📍", navigation = "🧭", globe = "🌐", world = "🌍",
 
     -- people
-    user = "☺", users = "☺☺", usercheck = "✓☺", userplus = "+☺",
-    userminus = "-☺", userx = "✕☺", person = "☺", personstanding = "🚶",
+    user = "🙂", users = "🙂🙂", usercheck = "✓🙂", userplus = "+🙂",
+    userminus = "-🙂", userx = "✕🙂", person = "😀", personstanding = "🚶",
     crown = "♛", baby = "👶",
 
     -- actions / media
