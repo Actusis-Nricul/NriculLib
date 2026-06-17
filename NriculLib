@@ -27,7 +27,7 @@ local LocalPlayer = Players.LocalPlayer
 -- =====================
 local IconGlyphs = {
     -- navigation / general
-    home = "⌂", settings = "⚙", gear = "⚙", menu = "☰", grid = "▦",
+    home = "🏡", settings = "⚙️", gear = "⚙️", menu = "☰", grid = "▦",
     list = "☰", layout = "▣", sidebar = "▤", compass = "🧭", map = "🗺",
     mappin = "📍", navigation = "🧭", globe = "🌐", world = "🌍",
 
