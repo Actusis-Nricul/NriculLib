@@ -34,7 +34,7 @@ local IconGlyphs = {
     -- people
     user = "🙂", users = "🙂🙂", usercheck = "✓🙂", userplus = "+🙂",
     userminus = "-🙂", userx = "✕🙂", person = "😀", personstanding = "🚶",
-    crown = "♛", baby = "👶",
+    crown = "♛", baby = "👶", lift = "🏋️", workout = "🏋️", weight = "🏋️", weightlift = "🏋️", weightlifter = "🏋️",
 
     -- actions / media
     play = "▶", pause = "❚❚", stop = "■", skipback = "⏮", skipforward = "⏭",
