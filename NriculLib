@@ -101,7 +101,7 @@ local IconGlyphs = {
     star = "★", heart = "♥", heartoff = "🚫♥", bookmark = "🔖",
     flag = "🏳", flagoff = "🏴", award = "🏅", trophy = "🏆", medal = "🎖",
     gift = "🎁", target = "🎯", crosshair = "✛", anchor = "⚓",
-    zap = "⚡", zapoff = "⚡✕", battery = "🔋", batterylow = "🪫",
+    zap = "⚡", bolt = "⚡", lightning = "⚡", lightningbolt = "⚡", zapoff = "⚡✕", battery = "🔋", batterylow = "🪫",
     plug = "🔌", power = "⏻", powermin = "⏻",
 
     -- gaming / fantasy
