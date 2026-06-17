@@ -105,7 +105,7 @@ local IconGlyphs = {
     plug = "🔌", power = "⏻", powermin = "⏻",
 
     -- gaming / fantasy
-    sword = "⚔", swords = "⚔", skull = "☠", gamepad = "🎮", gamepad2 = "🎮",
+    sword = "⚔", swords = "⚔", skull = "💀", skullcross = "☠️", gamepad = "🎮", gamepad2 = "🎮",
     dice1 = "⚀", dice5 = "⚄", puzzle = "🧩", joystick = "🕹",
     rocket = "🚀", ghost = "👻", bug = "🐛", bot = "🤖",
 
@@ -117,10 +117,10 @@ local IconGlyphs = {
     sparkles = "✨", sparkle = "✨", flameicon = "🔥", flame = "🔥", fire = "🔥", lightbulb = "💡",
     palette = "🎨", paintbrush = "🖌", scissors = "✂", ruler = "📏",
     wrench = "🔧", hammer = "🔨", tool = "🛠", settings2 = "⚙",
-    sliders = "🎛", toggleleft = "◯", toggleright = "⬤",
+    sliders = "🎛", toggleoff = "◯", toggleon = "⬤",
     layers = "▤", maximize = "⛶", minimize = "⛶", expand = "⤢", shrink = "⤡",
-    monitor = "🖥", smartphone = "📱", tablet = "📱", laptop = "💻",
-    printer = "🖨", keyboard = "⌨", mouse = "🖱", galaxy = "🌌",
+    monitor = "🖥️", smartphone = "📱", tablet = "📱", laptop = "💻",
+    printer = "🖨", keyboard = "⌨", mouse = "🖱", galaxy = "🌌", xray = "🩻",
 }
 
 local function resolveIconGlyph(icon)
