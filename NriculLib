@@ -23,7 +23,7 @@ local LocalPlayer = Players.LocalPlayer
 
 -- =====================
 -- ICON FALLBACK (Lucide-name -> glyph)
--- 130+ and also 67 meme is dead btw subscribe to Actusis rn
+-- 130+ icons and also 67 meme is dead btw subscribe to Actusis rn
 -- =====================
 local IconGlyphs = {
     -- navigation / general
