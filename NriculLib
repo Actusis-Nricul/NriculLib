@@ -2,12 +2,8 @@
     NriculLib
     by Actusis-Nricul
 
-    A Rayfield-style UI library built entirely from runtime Instances.
-    Usage:
-        local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/main/Lib.lua'))()
-        local Window = Lib:CreateGui({ ... })
-        local Tab = Window:CreateTab("Home")
-        local Button = Tab:CreateButton({...})
+    Load with:
+    local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib.lua'))()
 ]]
 
 local NriculLib = {}
@@ -26,83 +22,107 @@ local HttpService        = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 
 -- =====================
+-- ICON FALLBACK (Lucide-name -> glyph)
+-- Since this library has no hosted icon spritesheet, names map to
+-- text glyphs/emoji as a lightweight fallback. Pass any string name;
+-- unmapped names just render blank rather than erroring.
+-- =====================
+local IconGlyphs = {
+    home = "⌂", settings = "⚙", gear = "⚙", user = "☺", users = "☺☺",
+    play = "▶", pause = "❚❚", stop = "■", trash = "🗑", search = "🔍",
+    star = "★", heart = "♥", bell = "🔔", lock = "🔒", unlock = "🔓",
+    eye = "👁", zap = "⚡", flame = "🔥", skull = "☠", shield = "🛡",
+    gamepad = "🎮", sword = "⚔", map = "🗺", check = "✓", x = "✕",
+    arrowup = "↑", arrowdown = "↓", arrowleft = "←", arrowright = "→",
+    plus = "+", minus = "-", info = "ⓘ", warning = "⚠", clock = "🕐",
+    folder = "📁", file = "📄", download = "↓", upload = "↑",
+    key = "🔑", chevronup = "︿", chevrondown = "﹀",
+}
+
+local function resolveIconGlyph(icon)
+    if not icon or icon == "" then return "" end
+    if typeof(icon) == "string" then
+        local glyph = IconGlyphs[icon:lower():gsub("[%-%s]", "")]
+        return glyph or ""
+    end
+    return ""
+end
+
+-- =====================
 -- THEMES
 -- =====================
 NriculLib.Theme = {
     Default = {
-        Background           = Color3.fromRGB(18, 18, 26),
-        Topbar                = Color3.fromRGB(24, 24, 34),
-        Accent                = Color3.fromRGB(90, 110, 255),
-        TextColor             = Color3.fromRGB(235, 235, 245),
-        SubTextColor          = Color3.fromRGB(150, 150, 165),
-        TabBackground         = Color3.fromRGB(26, 26, 38),
-        TabSelected           = Color3.fromRGB(90, 110, 255),
-        ElementBackground     = Color3.fromRGB(28, 28, 40),
-        ElementHover          = Color3.fromRGB(36, 36, 50),
-        ElementStroke         = Color3.fromRGB(45, 45, 60),
-        ToggleOn              = Color3.fromRGB(90, 200, 130),
-        ToggleOff             = Color3.fromRGB(60, 60, 75),
-        InputBackground       = Color3.fromRGB(22, 22, 32),
+        Background = Color3.fromRGB(18, 18, 26), Topbar = Color3.fromRGB(24, 24, 34),
+        Accent = Color3.fromRGB(90, 110, 255), TextColor = Color3.fromRGB(235, 235, 245),
+        SubTextColor = Color3.fromRGB(150, 150, 165), TabBackground = Color3.fromRGB(26, 26, 38),
+        TabSelected = Color3.fromRGB(90, 110, 255), ElementBackground = Color3.fromRGB(28, 28, 40),
+        ElementHover = Color3.fromRGB(36, 36, 50), ElementStroke = Color3.fromRGB(45, 45, 60),
+        ToggleOn = Color3.fromRGB(90, 200, 130), ToggleOff = Color3.fromRGB(60, 60, 75),
+        InputBackground = Color3.fromRGB(22, 22, 32),
     },
     Midnight = {
-        Background           = Color3.fromRGB(10, 10, 16),
-        Topbar                = Color3.fromRGB(14, 14, 22),
-        Accent                = Color3.fromRGB(140, 80, 255),
-        TextColor             = Color3.fromRGB(230, 230, 240),
-        SubTextColor          = Color3.fromRGB(120, 120, 140),
-        TabBackground         = Color3.fromRGB(16, 16, 26),
-        TabSelected           = Color3.fromRGB(140, 80, 255),
-        ElementBackground     = Color3.fromRGB(18, 18, 28),
-        ElementHover          = Color3.fromRGB(26, 26, 38),
-        ElementStroke         = Color3.fromRGB(35, 35, 50),
-        ToggleOn              = Color3.fromRGB(140, 80, 255),
-        ToggleOff             = Color3.fromRGB(45, 45, 60),
-        InputBackground       = Color3.fromRGB(14, 14, 22),
+        Background = Color3.fromRGB(10, 10, 16), Topbar = Color3.fromRGB(14, 14, 22),
+        Accent = Color3.fromRGB(140, 80, 255), TextColor = Color3.fromRGB(230, 230, 240),
+        SubTextColor = Color3.fromRGB(120, 120, 140), TabBackground = Color3.fromRGB(16, 16, 26),
+        TabSelected = Color3.fromRGB(140, 80, 255), ElementBackground = Color3.fromRGB(18, 18, 28),
+        ElementHover = Color3.fromRGB(26, 26, 38), ElementStroke = Color3.fromRGB(35, 35, 50),
+        ToggleOn = Color3.fromRGB(140, 80, 255), ToggleOff = Color3.fromRGB(45, 45, 60),
+        InputBackground = Color3.fromRGB(14, 14, 22),
     },
     Ocean = {
-        Background           = Color3.fromRGB(12, 22, 28),
-        Topbar                = Color3.fromRGB(16, 28, 34),
-        Accent                = Color3.fromRGB(40, 180, 220),
-        TextColor             = Color3.fromRGB(225, 240, 245),
-        SubTextColor          = Color3.fromRGB(120, 160, 170),
-        TabBackground         = Color3.fromRGB(18, 32, 38),
-        TabSelected           = Color3.fromRGB(40, 180, 220),
-        ElementBackground     = Color3.fromRGB(20, 36, 42),
-        ElementHover          = Color3.fromRGB(26, 46, 52),
-        ElementStroke         = Color3.fromRGB(35, 60, 68),
-        ToggleOn              = Color3.fromRGB(40, 180, 220),
-        ToggleOff             = Color3.fromRGB(45, 60, 65),
-        InputBackground       = Color3.fromRGB(16, 28, 34),
+        Background = Color3.fromRGB(12, 22, 28), Topbar = Color3.fromRGB(16, 28, 34),
+        Accent = Color3.fromRGB(40, 180, 220), TextColor = Color3.fromRGB(225, 240, 245),
+        SubTextColor = Color3.fromRGB(120, 160, 170), TabBackground = Color3.fromRGB(18, 32, 38),
+        TabSelected = Color3.fromRGB(40, 180, 220), ElementBackground = Color3.fromRGB(20, 36, 42),
+        ElementHover = Color3.fromRGB(26, 46, 52), ElementStroke = Color3.fromRGB(35, 60, 68),
+        ToggleOn = Color3.fromRGB(40, 180, 220), ToggleOff = Color3.fromRGB(45, 60, 65),
+        InputBackground = Color3.fromRGB(16, 28, 34),
     },
     Crimson = {
-        Background           = Color3.fromRGB(22, 12, 14),
-        Topbar                = Color3.fromRGB(30, 16, 18),
-        Accent                = Color3.fromRGB(230, 60, 70),
-        TextColor             = Color3.fromRGB(245, 230, 230),
-        SubTextColor          = Color3.fromRGB(170, 130, 130),
-        TabBackground         = Color3.fromRGB(32, 18, 20),
-        TabSelected           = Color3.fromRGB(230, 60, 70),
-        ElementBackground     = Color3.fromRGB(34, 20, 22),
-        ElementHover          = Color3.fromRGB(44, 26, 28),
-        ElementStroke         = Color3.fromRGB(55, 35, 38),
-        ToggleOn              = Color3.fromRGB(230, 60, 70),
-        ToggleOff             = Color3.fromRGB(55, 40, 42),
-        InputBackground       = Color3.fromRGB(26, 14, 16),
+        Background = Color3.fromRGB(22, 12, 14), Topbar = Color3.fromRGB(30, 16, 18),
+        Accent = Color3.fromRGB(230, 60, 70), TextColor = Color3.fromRGB(245, 230, 230),
+        SubTextColor = Color3.fromRGB(170, 130, 130), TabBackground = Color3.fromRGB(32, 18, 20),
+        TabSelected = Color3.fromRGB(230, 60, 70), ElementBackground = Color3.fromRGB(34, 20, 22),
+        ElementHover = Color3.fromRGB(44, 26, 28), ElementStroke = Color3.fromRGB(55, 35, 38),
+        ToggleOn = Color3.fromRGB(230, 60, 70), ToggleOff = Color3.fromRGB(55, 40, 42),
+        InputBackground = Color3.fromRGB(26, 14, 16),
     },
     Light = {
-        Background           = Color3.fromRGB(240, 240, 245),
-        Topbar                = Color3.fromRGB(225, 225, 235),
-        Accent                = Color3.fromRGB(70, 110, 230),
-        TextColor             = Color3.fromRGB(30, 30, 40),
-        SubTextColor          = Color3.fromRGB(100, 100, 115),
-        TabBackground         = Color3.fromRGB(220, 220, 230),
-        TabSelected           = Color3.fromRGB(70, 110, 230),
-        ElementBackground     = Color3.fromRGB(228, 228, 238),
-        ElementHover          = Color3.fromRGB(215, 215, 228),
-        ElementStroke         = Color3.fromRGB(200, 200, 212),
-        ToggleOn              = Color3.fromRGB(70, 150, 230),
-        ToggleOff             = Color3.fromRGB(190, 190, 200),
-        InputBackground       = Color3.fromRGB(232, 232, 242),
+        Background = Color3.fromRGB(240, 240, 245), Topbar = Color3.fromRGB(225, 225, 235),
+        Accent = Color3.fromRGB(70, 110, 230), TextColor = Color3.fromRGB(30, 30, 40),
+        SubTextColor = Color3.fromRGB(100, 100, 115), TabBackground = Color3.fromRGB(220, 220, 230),
+        TabSelected = Color3.fromRGB(70, 110, 230), ElementBackground = Color3.fromRGB(228, 228, 238),
+        ElementHover = Color3.fromRGB(215, 215, 228), ElementStroke = Color3.fromRGB(200, 200, 212),
+        ToggleOn = Color3.fromRGB(70, 150, 230), ToggleOff = Color3.fromRGB(190, 190, 200),
+        InputBackground = Color3.fromRGB(232, 232, 242),
+    },
+    Forest = {
+        Background = Color3.fromRGB(12, 20, 14), Topbar = Color3.fromRGB(16, 26, 18),
+        Accent = Color3.fromRGB(80, 200, 110), TextColor = Color3.fromRGB(225, 240, 225),
+        SubTextColor = Color3.fromRGB(130, 160, 130), TabBackground = Color3.fromRGB(18, 30, 20),
+        TabSelected = Color3.fromRGB(80, 200, 110), ElementBackground = Color3.fromRGB(20, 34, 22),
+        ElementHover = Color3.fromRGB(26, 44, 28), ElementStroke = Color3.fromRGB(35, 55, 38),
+        ToggleOn = Color3.fromRGB(80, 200, 110), ToggleOff = Color3.fromRGB(45, 60, 45),
+        InputBackground = Color3.fromRGB(16, 28, 18),
+    },
+    Amber = {
+        Background = Color3.fromRGB(24, 18, 10), Topbar = Color3.fromRGB(32, 24, 14),
+        Accent = Color3.fromRGB(255, 170, 50), TextColor = Color3.fromRGB(250, 235, 215),
+        SubTextColor = Color3.fromRGB(180, 150, 110), TabBackground = Color3.fromRGB(34, 26, 16),
+        TabSelected = Color3.fromRGB(255, 170, 50), ElementBackground = Color3.fromRGB(36, 28, 18),
+        ElementHover = Color3.fromRGB(46, 36, 24), ElementStroke = Color3.fromRGB(60, 46, 30),
+        ToggleOn = Color3.fromRGB(255, 170, 50), ToggleOff = Color3.fromRGB(60, 48, 36),
+        InputBackground = Color3.fromRGB(28, 20, 12),
+    },
+    Rose = {
+        Background = Color3.fromRGB(26, 14, 20), Topbar = Color3.fromRGB(34, 18, 26),
+        Accent = Color3.fromRGB(255, 100, 160), TextColor = Color3.fromRGB(250, 230, 240),
+        SubTextColor = Color3.fromRGB(190, 140, 165), TabBackground = Color3.fromRGB(36, 20, 28),
+        TabSelected = Color3.fromRGB(255, 100, 160), ElementBackground = Color3.fromRGB(38, 22, 30),
+        ElementHover = Color3.fromRGB(48, 28, 38), ElementStroke = Color3.fromRGB(62, 38, 48),
+        ToggleOn = Color3.fromRGB(255, 100, 160), ToggleOff = Color3.fromRGB(62, 42, 50),
+        InputBackground = Color3.fromRGB(30, 16, 22),
     },
 }
 
@@ -114,13 +134,9 @@ local SelectedTheme = NriculLib.Theme.Default
 local function create(class, props)
     local inst = Instance.new(class)
     for k, v in pairs(props or {}) do
-        if k ~= "Parent" then
-            inst[k] = v
-        end
+        if k ~= "Parent" then inst[k] = v end
     end
-    if props and props.Parent then
-        inst.Parent = props.Parent
-    end
+    if props and props.Parent then inst.Parent = props.Parent end
     return inst
 end
 
@@ -144,9 +160,6 @@ local function stroke(inst, color, thickness)
     })
 end
 
--- =====================
--- CALLBACK SAFETY
--- =====================
 local function safeCall(fn, ...)
     if not fn then return true end
     local ok, err = pcall(fn, ...)
@@ -157,58 +170,85 @@ local function safeCall(fn, ...)
 end
 
 -- =====================
--- DISCORD PROMPT (with persistence via executor workspace folder)
+-- FILESYSTEM SAFE WRAPPERS
 -- =====================
-local function handleDiscordPrompt(discordSettings)
+local hasFS = type(isfolder) == "function" and type(makefolder) == "function"
+    and type(isfile) == "function" and type(writefile) == "function" and type(readfile) == "function"
+
+local function ensureFolder(path)
+    if hasFS then
+        pcall(function()
+            if not isfolder(path) then makefolder(path) end
+        end)
+    end
+end
+
+-- =====================
+-- DISCORD JOIN HANDLING (fixed)
+-- Marks a per-invite file in NriculLib/Discord Invites so the user
+-- is only ever asked once per invite code, persisting across sessions
+-- via the executor's own filesystem.
+-- =====================
+local function handleDiscordPrompt(window, discordSettings)
     if not discordSettings or not discordSettings.Enabled then return end
     if not discordSettings.Invite or discordSettings.Invite == "" then return end
 
-    local folderName = "NriculLib"
-    local fileName    = folderName .. "/discord_" .. tostring(discordSettings.Invite) .. ".txt"
+    local folder = "NriculLib/Discord Invites"
+    ensureFolder("NriculLib")
+    ensureFolder(folder)
 
-    local hasFS = type(isfolder) == "function" and type(makefolder) == "function"
-        and type(isfile) == "function" and type(writefile) == "function"
+    local markerFile = folder .. "/" .. tostring(discordSettings.Invite) .. ".joined"
 
+    local alreadyJoined = false
     if hasFS then
+        local ok, result = pcall(isfile, markerFile)
+        alreadyJoined = ok and result
+    end
+
+    if alreadyJoined and discordSettings.RememberJoins ~= false then
+        return -- silently skip, already prompted
+    end
+
+    -- try native Discord RPC invite popup (works if Discord desktop app running)
+    local requestFunc = (syn and syn.request) or (fluxus and fluxus.request)
+        or (http and http.request) or http_request or request
+
+    local rpcSucceeded = false
+    if requestFunc then
         local ok = pcall(function()
-            if not isfolder(folderName) then
-                makefolder(folderName)
+            local res = requestFunc({
+                Url = "http://127.0.0.1:6463/rpc?v=1",
+                Method = "POST",
+                Headers = {
+                    ["Content-Type"] = "application/json",
+                    Origin = "https://discord.com",
+                },
+                Body = HttpService:JSONEncode({
+                    cmd = "INVITE_BROWSER",
+                    nonce = HttpService:GenerateGUID(false),
+                    args = {code = discordSettings.Invite},
+                }),
+            })
+            if res and (res.StatusCode == 200 or res.Success) then
+                rpcSucceeded = true
             end
         end)
+    end
 
-        local alreadyJoined = false
+    -- regardless of RPC success, notify the user so they always have a path to join
+    if window and window.Notify then
+        window:Notify({
+            Title = "Join our Discord",
+            Content = rpcSucceeded
+                and "Discord invite sent — check your Discord app!"
+                or ("Join us: discord.gg/" .. tostring(discordSettings.Invite)),
+            Duration = 8,
+        })
+    end
+
+    if hasFS then
         pcall(function()
-            alreadyJoined = isfile(fileName)
-        end)
-
-        if alreadyJoined and discordSettings.RememberJoins ~= false then
-            return -- already prompted before, skip
-        end
-
-        -- attempt to open discord invite via executor request, fallback to nothing
-        local requestFunc = (syn and syn.request) or (fluxus and fluxus.request)
-            or (http and http.request) or http_request or request
-
-        if requestFunc then
-            pcall(function()
-                requestFunc({
-                    Url = "http://127.0.0.1:6463/rpc?v=1",
-                    Method = "POST",
-                    Headers = {
-                        ["Content-Type"] = "application/json",
-                        Origin = "https://discord.com",
-                    },
-                    Body = HttpService:JSONEncode({
-                        cmd = "INVITE_BROWSER",
-                        nonce = HttpService:GenerateGUID(false),
-                        args = {code = discordSettings.Invite},
-                    }),
-                })
-            end)
-        end
-
-        pcall(function()
-            writefile(fileName, "NriculLib has recorded that you joined this Discord invite: " .. tostring(discordSettings.Invite))
+            writefile(markerFile, "joined at " .. tostring(os.time()))
         end)
     end
 end
@@ -219,24 +259,158 @@ end
 function NriculLib:CreateGui(settings)
     settings = settings or {}
 
+    -- =====================
+    -- KEY SYSTEM (no HTTP — local key check only)
+    -- =====================
+    if settings.KeySystem then
+        local ks = settings.KeySettings or {}
+        local validKeys = ks.Key or {}
+        if typeof(validKeys) == "string" then validKeys = {validKeys} end
+
+        local folder = "NriculLib/Key System"
+        ensureFolder("NriculLib")
+        ensureFolder(folder)
+        local keyFile = folder .. "/" .. tostring(ks.FileName or "key") .. ".key"
+
+        local passthrough = false
+
+        -- check saved key first
+        if hasFS and ks.SaveKey then
+            local ok, saved = pcall(readfile, keyFile)
+            if ok and saved then
+                for _, validKey in ipairs(validKeys) do
+                    if saved == validKey then
+                        passthrough = true
+                        break
+                    end
+                end
+            end
+        end
+
+        if not passthrough then
+            -- build a blocking key entry UI
+            local keyGui = create("ScreenGui", {
+                Name = "NriculLib_KeyCheck",
+                ResetOnSpawn = false,
+                DisplayOrder = 1000,
+            })
+            local parentTarget = (gethui and gethui()) or CoreGui
+            if syn and syn.protect_gui then pcall(syn.protect_gui, keyGui) end
+            keyGui.Parent = parentTarget
+
+            local keyMain = create("Frame", {
+                Size = UDim2.new(0, 360, 0, 200),
+                Position = UDim2.new(0.5, -180, 0.5, -100),
+                BackgroundColor3 = SelectedTheme.Background,
+                BorderSizePixel = 0,
+                Parent = keyGui,
+            })
+            round(keyMain, 12)
+            stroke(keyMain, SelectedTheme.ElementStroke)
+
+            create("TextLabel", {
+                Size = UDim2.new(1, -20, 0, 28),
+                Position = UDim2.new(0, 10, 0, 14),
+                BackgroundTransparency = 1,
+                Text = ks.Title or "Key Required",
+                TextColor3 = SelectedTheme.TextColor,
+                Font = Enum.Font.GothamBold,
+                TextSize = 18,
+                Parent = keyMain,
+            })
+
+            create("TextLabel", {
+                Size = UDim2.new(1, -20, 0, 18),
+                Position = UDim2.new(0, 10, 0, 42),
+                BackgroundTransparency = 1,
+                Text = ks.Subtitle or "Enter your key to continue",
+                TextColor3 = SelectedTheme.SubTextColor,
+                Font = Enum.Font.Gotham,
+                TextSize = 12,
+                Parent = keyMain,
+            })
+
+            create("TextLabel", {
+                Size = UDim2.new(1, -20, 0, 36),
+                Position = UDim2.new(0, 10, 0, 64),
+                BackgroundTransparency = 1,
+                Text = ks.Note or "No instructions provided.",
+                TextColor3 = SelectedTheme.SubTextColor,
+                Font = Enum.Font.Gotham,
+                TextSize = 11,
+                TextWrapped = true,
+                Parent = keyMain,
+            })
+
+            local inputBox = create("TextBox", {
+                Size = UDim2.new(1, -20, 0, 34),
+                Position = UDim2.new(0, 10, 0, 108),
+                BackgroundColor3 = SelectedTheme.InputBackground,
+                Text = "",
+                PlaceholderText = "Enter key here...",
+                TextColor3 = SelectedTheme.TextColor,
+                PlaceholderColor3 = SelectedTheme.SubTextColor,
+                Font = Enum.Font.Gotham,
+                TextSize = 13,
+                ClearTextOnFocus = false,
+                BorderSizePixel = 0,
+                Parent = keyMain,
+            })
+            round(inputBox, 8)
+            stroke(inputBox, SelectedTheme.ElementStroke)
+
+            local submitBtn = create("TextButton", {
+                Size = UDim2.new(1, -20, 0, 34),
+                Position = UDim2.new(0, 10, 0, 150),
+                BackgroundColor3 = SelectedTheme.Accent,
+                Text = "Submit",
+                TextColor3 = Color3.new(1, 1, 1),
+                Font = Enum.Font.GothamBold,
+                TextSize = 13,
+                AutoButtonColor = false,
+                BorderSizePixel = 0,
+                Parent = keyMain,
+            })
+            round(submitBtn, 8)
+
+            local waiting = true
+            local function attempt()
+                local text = inputBox.Text
+                for _, validKey in ipairs(validKeys) do
+                    if text == validKey then
+                        if hasFS and ks.SaveKey then
+                            pcall(writefile, keyFile, text)
+                        end
+                        waiting = false
+                        keyGui:Destroy()
+                        return
+                    end
+                end
+                tween(keyMain, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 20, 20)})
+                task.wait(0.15)
+                tween(keyMain, TweenInfo.new(0.3), {BackgroundColor3 = SelectedTheme.Background})
+                inputBox.Text = ""
+            end
+
+            submitBtn.MouseButton1Click:Connect(attempt)
+            inputBox.FocusLost:Connect(function(enterPressed)
+                if enterPressed then attempt() end
+            end)
+
+            repeat task.wait(0.1) until not waiting
+        end
+    end
+
     local Window = {}
     Window._tabs = {}
     Window._connections = {}
 
-    -- theme setup
     if settings.Theme then
         if typeof(settings.Theme) == "string" and NriculLib.Theme[settings.Theme] then
             SelectedTheme = NriculLib.Theme[settings.Theme]
         elseif typeof(settings.Theme) == "table" then
             SelectedTheme = settings.Theme
         end
-    end
-
-    -- discord prompt
-    if settings.Discord then
-        task.spawn(function()
-            handleDiscordPrompt(settings.Discord)
-        end)
     end
 
     -- =====================
@@ -249,25 +423,13 @@ function NriculLib:CreateGui(settings)
         DisplayOrder = 999,
     })
 
-    -- destroy old instance of same name if exists
-    local parentTarget
-    if gethui then
-        parentTarget = gethui()
-    elseif syn and syn.protect_gui then
-        parentTarget = CoreGui
-    else
-        parentTarget = CoreGui
-    end
+    local parentTarget = (gethui and gethui()) or CoreGui
 
     for _, child in ipairs(parentTarget:GetChildren()) do
-        if child.Name == screenGui.Name then
-            child:Destroy()
-        end
+        if child.Name == screenGui.Name then child:Destroy() end
     end
 
-    if syn and syn.protect_gui then
-        pcall(function() syn.protect_gui(screenGui) end)
-    end
+    if syn and syn.protect_gui then pcall(syn.protect_gui, screenGui) end
     screenGui.Parent = parentTarget
 
     local minimized = false
@@ -284,7 +446,7 @@ function NriculLib:CreateGui(settings)
     round(main, 12)
     stroke(main, SelectedTheme.ElementStroke, 1)
 
-    local shadow = create("ImageLabel", {
+    create("ImageLabel", {
         Size = UDim2.new(1, 60, 1, 60),
         Position = UDim2.new(0, -30, 0, -30),
         BackgroundTransparency = 1,
@@ -309,7 +471,7 @@ function NriculLib:CreateGui(settings)
     })
     round(topbar, 12)
 
-    local topbarFix = create("Frame", {
+    create("Frame", {
         Size = UDim2.new(1, 0, 0.5, 0),
         Position = UDim2.new(0, 0, 0.5, 0),
         BackgroundColor3 = SelectedTheme.Topbar,
@@ -328,7 +490,7 @@ function NriculLib:CreateGui(settings)
     })
     round(iconCircle, 13)
 
-    local iconLabel = create("TextLabel", {
+    create("TextLabel", {
         Size = UDim2.new(1, 0, 1, 0),
         BackgroundTransparency = 1,
         Text = (settings.Name or "N"):sub(1, 1):upper(),
@@ -339,7 +501,7 @@ function NriculLib:CreateGui(settings)
         Parent = iconCircle,
     })
 
-    local titleLabel = create("TextLabel", {
+    create("TextLabel", {
         Size = UDim2.new(1, -160, 1, 0),
         Position = UDim2.new(0, 46, 0, 0),
         BackgroundTransparency = 1,
@@ -366,9 +528,7 @@ function NriculLib:CreateGui(settings)
         Parent = topbar,
     })
     round(closeBtn, 13)
-    closeBtn.MouseButton1Click:Connect(function()
-        screenGui:Destroy()
-    end)
+    closeBtn.MouseButton1Click:Connect(function() screenGui:Destroy() end)
 
     local minBtn = create("TextButton", {
         Size = UDim2.new(0, 26, 0, 26),
@@ -393,14 +553,9 @@ function NriculLib:CreateGui(settings)
             tween(main, QUICK, {Size = mainSize})
         end
     end
+    minBtn.MouseButton1Click:Connect(function() setMinimized(not minimized) end)
 
-    minBtn.MouseButton1Click:Connect(function()
-        setMinimized(not minimized)
-    end)
-
-    -- =====================
-    -- DRAGGING
-    -- =====================
+    -- dragging
     local dragging, dragStart, startPos
     topbar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -412,10 +567,7 @@ function NriculLib:CreateGui(settings)
     UserInputService.InputChanged:Connect(function(input)
         if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - dragStart
-            main.Position = UDim2.new(
-                startPos.X.Scale, startPos.X.Offset + delta.X,
-                startPos.Y.Scale, startPos.Y.Offset + delta.Y
-            )
+            main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
         end
     end)
     UserInputService.InputEnded:Connect(function(input)
@@ -424,24 +576,17 @@ function NriculLib:CreateGui(settings)
         end
     end)
 
-    -- =====================
-    -- MINIMIZE / TOGGLE UI KEYBINDS
-    -- =====================
+    -- keybinds
     local minimizeKeybind = settings.MinimizeKeybind
     local toggleUIKeybind  = settings.ToggleUIKeybind
-
     local guiVisible = true
 
     UserInputService.InputBegan:Connect(function(input, gpe)
         if gpe then return end
-
         if minimizeKeybind then
             local kc = typeof(minimizeKeybind) == "string" and Enum.KeyCode[minimizeKeybind:upper()] or minimizeKeybind
-            if kc and input.KeyCode == kc then
-                setMinimized(not minimized)
-            end
+            if kc and input.KeyCode == kc then setMinimized(not minimized) end
         end
-
         if toggleUIKeybind then
             local kc = typeof(toggleUIKeybind) == "string" and Enum.KeyCode[toggleUIKeybind:upper()] or toggleUIKeybind
             if kc and input.KeyCode == kc then
@@ -452,10 +597,9 @@ function NriculLib:CreateGui(settings)
     end)
 
     -- =====================
-    -- TAB LIST (left side)
+    -- TAB LIST
     -- =====================
     local tabListWidth = 130
-
     local tabList = create("Frame", {
         Size = UDim2.new(0, tabListWidth, 1, -42),
         Position = UDim2.new(0, 0, 0, 42),
@@ -464,21 +608,9 @@ function NriculLib:CreateGui(settings)
         ZIndex = 4,
         Parent = main,
     })
+    create("UIListLayout", {Padding = UDim.new(0, 4), Parent = tabList})
+    create("UIPadding", {PaddingTop = UDim.new(0, 10), PaddingLeft = UDim.new(0, 8), PaddingRight = UDim.new(0, 8), Parent = tabList})
 
-    local tabListLayout = create("UIListLayout", {
-        Padding = UDim.new(0, 4),
-        Parent = tabList,
-    })
-    local tabListPad = create("UIPadding", {
-        PaddingTop = UDim.new(0, 10),
-        PaddingLeft = UDim.new(0, 8),
-        PaddingRight = UDim.new(0, 8),
-        Parent = tabList,
-    })
-
-    -- =====================
-    -- CONTENT AREA (right side, holds all tab pages)
-    -- =====================
     local contentArea = create("Frame", {
         Size = UDim2.new(1, -tabListWidth, 1, -42),
         Position = UDim2.new(0, tabListWidth, 0, 42),
@@ -490,16 +622,16 @@ function NriculLib:CreateGui(settings)
     local firstTabSet = false
 
     -- =====================
-    -- NOTIFICATIONS
+    -- NOTIFICATIONS (fixed: actually works, stacks, auto-clears)
     -- =====================
     local notifContainer = create("Frame", {
         Size = UDim2.new(0, 300, 1, -20),
         Position = UDim2.new(1, -310, 0, 10),
         BackgroundTransparency = 1,
-        ZIndex = 200,
+        ZIndex = 500,
         Parent = screenGui,
     })
-    local notifLayout = create("UIListLayout", {
+    create("UIListLayout", {
         VerticalAlignment = Enum.VerticalAlignment.Bottom,
         Padding = UDim.new(0, 6),
         Parent = notifContainer,
@@ -510,65 +642,87 @@ function NriculLib:CreateGui(settings)
         local notif = create("Frame", {
             Size = UDim2.new(1, 0, 0, 64),
             BackgroundColor3 = SelectedTheme.ElementBackground,
+            BackgroundTransparency = 1,
             BorderSizePixel = 0,
-            ZIndex = 201,
+            ZIndex = 501,
             Parent = notifContainer,
         })
         round(notif, 8)
-        stroke(notif, SelectedTheme.ElementStroke)
+        local s = stroke(notif, SelectedTheme.ElementStroke)
+        s.Transparency = 1
 
-        create("Frame", {
+        local accent = create("Frame", {
             Size = UDim2.new(0, 3, 1, -12),
             Position = UDim2.new(0, 0, 0, 6),
             BackgroundColor3 = SelectedTheme.Accent,
+            BackgroundTransparency = 1,
             BorderSizePixel = 0,
-            ZIndex = 202,
+            ZIndex = 502,
             Parent = notif,
         })
 
-        create("TextLabel", {
+        local titleL = create("TextLabel", {
             Size = UDim2.new(1, -16, 0, 22),
             Position = UDim2.new(0, 12, 0, 6),
             BackgroundTransparency = 1,
             Text = data.Title or "Notification",
             TextColor3 = SelectedTheme.TextColor,
+            TextTransparency = 1,
             Font = Enum.Font.GothamBold,
             TextSize = 13,
             TextXAlignment = Enum.TextXAlignment.Left,
-            ZIndex = 202,
+            ZIndex = 502,
             Parent = notif,
         })
 
-        create("TextLabel", {
+        local contentL = create("TextLabel", {
             Size = UDim2.new(1, -16, 0, 30),
             Position = UDim2.new(0, 12, 0, 28),
             BackgroundTransparency = 1,
             Text = data.Content or "",
             TextColor3 = SelectedTheme.SubTextColor,
+            TextTransparency = 1,
             Font = Enum.Font.Gotham,
             TextSize = 11,
             TextWrapped = true,
             TextXAlignment = Enum.TextXAlignment.Left,
             TextYAlignment = Enum.TextYAlignment.Top,
-            ZIndex = 202,
+            ZIndex = 502,
             Parent = notif,
         })
+
+        -- fade in
+        tween(notif, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        tween(s, TweenInfo.new(0.3), {Transparency = 0})
+        tween(accent, TweenInfo.new(0.3), {BackgroundTransparency = 0})
+        tween(titleL, TweenInfo.new(0.3), {TextTransparency = 0})
+        tween(contentL, TweenInfo.new(0.3), {TextTransparency = 0})
 
         task.delay(data.Duration or 4, function()
             if notif and notif.Parent then
                 tween(notif, TweenInfo.new(0.3), {BackgroundTransparency = 1})
-                task.wait(0.3)
-                notif:Destroy()
+                tween(s, TweenInfo.new(0.3), {Transparency = 1})
+                tween(accent, TweenInfo.new(0.3), {BackgroundTransparency = 1})
+                tween(titleL, TweenInfo.new(0.3), {TextTransparency = 1})
+                tween(contentL, TweenInfo.new(0.3), {TextTransparency = 1})
+                task.wait(0.35)
+                if notif then notif:Destroy() end
             end
         end)
     end
 
+    -- now safe to run discord prompt since Window:Notify exists
+    if settings.Discord then
+        task.spawn(function()
+            handleDiscordPrompt(Window, settings.Discord)
+        end)
+    end
+
     -- =====================
-    -- CreateTab
+    -- CreateTab (now supports Lucide-style icon name)
     -- =====================
     function Window:CreateTab(name, icon)
         local Tab = {}
-        Tab._sections = {}
 
         local tabBtn = create("TextButton", {
             Size = UDim2.new(1, 0, 0, 34),
@@ -580,9 +734,25 @@ function NriculLib:CreateGui(settings)
         })
         round(tabBtn, 8)
 
+        local iconGlyph = resolveIconGlyph(icon)
+        local labelOffset = iconGlyph ~= "" and 30 or 12
+
+        if iconGlyph ~= "" then
+            create("TextLabel", {
+                Size = UDim2.new(0, 18, 1, 0),
+                Position = UDim2.new(0, 8, 0, 0),
+                BackgroundTransparency = 1,
+                Text = iconGlyph,
+                TextColor3 = SelectedTheme.SubTextColor,
+                Font = Enum.Font.GothamBold,
+                TextSize = 13,
+                Parent = tabBtn,
+            })
+        end
+
         local tabLabel = create("TextLabel", {
-            Size = UDim2.new(1, -16, 1, 0),
-            Position = UDim2.new(0, 12, 0, 0),
+            Size = UDim2.new(1, -labelOffset - 4, 1, 0),
+            Position = UDim2.new(0, labelOffset, 0, 0),
             BackgroundTransparency = 1,
             Text = name,
             TextColor3 = SelectedTheme.SubTextColor,
@@ -601,19 +771,12 @@ function NriculLib:CreateGui(settings)
             Visible = false,
             Parent = contentArea,
         })
-
-        local pageLayout = create("UIListLayout", {
-            Padding = UDim.new(0, 6),
+        local pageLayout = create("UIListLayout", {Padding = UDim.new(0, 6), Parent = tabPage})
+        create("UIPadding", {
+            PaddingTop = UDim.new(0, 10), PaddingLeft = UDim.new(0, 10),
+            PaddingRight = UDim.new(0, 14), PaddingBottom = UDim.new(0, 10),
             Parent = tabPage,
         })
-        local pagePad = create("UIPadding", {
-            PaddingTop = UDim.new(0, 10),
-            PaddingLeft = UDim.new(0, 10),
-            PaddingRight = UDim.new(0, 14),
-            PaddingBottom = UDim.new(0, 10),
-            Parent = tabPage,
-        })
-
         pageLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
             tabPage.CanvasSize = UDim2.new(0, 0, 0, pageLayout.AbsoluteContentSize.Y + 20)
         end)
@@ -631,14 +794,10 @@ function NriculLib:CreateGui(settings)
 
         tabBtn.MouseButton1Click:Connect(selectTab)
         tabBtn.MouseEnter:Connect(function()
-            if not tabPage.Visible then
-                tween(tabBtn, TweenInfo.new(0.15), {BackgroundColor3 = SelectedTheme.ElementHover})
-            end
+            if not tabPage.Visible then tween(tabBtn, TweenInfo.new(0.15), {BackgroundColor3 = SelectedTheme.ElementHover}) end
         end)
         tabBtn.MouseLeave:Connect(function()
-            if not tabPage.Visible then
-                tween(tabBtn, TweenInfo.new(0.15), {BackgroundColor3 = SelectedTheme.TabBackground})
-            end
+            if not tabPage.Visible then tween(tabBtn, TweenInfo.new(0.15), {BackgroundColor3 = SelectedTheme.TabBackground}) end
         end)
 
         table.insert(Window._tabs, {btn = tabBtn, label = tabLabel, page = tabPage})
@@ -648,36 +807,21 @@ function NriculLib:CreateGui(settings)
             selectTab()
         end
 
-        -- =====================
         -- CreateSection
-        -- =====================
         function Tab:CreateSection(sectionName)
-            local sec = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 22),
-                BackgroundTransparency = 1,
-                Parent = tabPage,
+            local sec = create("Frame", {Size = UDim2.new(1, 0, 0, 22), BackgroundTransparency = 1, Parent = tabPage})
+            local lbl = create("TextLabel", {
+                Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1,
+                Text = sectionName:upper(), TextColor3 = SelectedTheme.Accent,
+                Font = Enum.Font.GothamBold, TextSize = 10,
+                TextXAlignment = Enum.TextXAlignment.Left, Parent = sec,
             })
-            create("TextLabel", {
-                Size = UDim2.new(1, 0, 1, 0),
-                BackgroundTransparency = 1,
-                Text = sectionName:upper(),
-                TextColor3 = SelectedTheme.Accent,
-                Font = Enum.Font.GothamBold,
-                TextSize = 10,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = sec,
-            })
-
             local SectionValue = {}
-            function SectionValue:Set(newName)
-                sec:FindFirstChildOfClass("TextLabel").Text = newName:upper()
-            end
+            function SectionValue:Set(newName) lbl.Text = newName:upper() end
             return SectionValue
         end
 
-        -- =====================
         -- CreateDivider
-        -- =====================
         function Tab:CreateDivider()
             local div = create("Frame", {
                 Size = UDim2.new(1, 0, 0, 1),
@@ -686,21 +830,77 @@ function NriculLib:CreateGui(settings)
                 Parent = tabPage,
             })
             local DividerValue = {}
-            function DividerValue:Set(visible)
-                div.Visible = visible
-            end
+            function DividerValue:Set(visible) div.Visible = visible end
             return DividerValue
         end
 
-        -- =====================
-        -- CreateButton
-        -- =====================
+        -- CreateLabel
+        function Tab:CreateLabel(text, icon2, color)
+            local glyph = resolveIconGlyph(icon2)
+            local lbl = create("TextLabel", {
+                Size = UDim2.new(1, 0, 0, 28),
+                BackgroundColor3 = SelectedTheme.ElementBackground,
+                Text = (glyph ~= "" and (glyph .. "  ") or "  ") .. text,
+                TextColor3 = color or SelectedTheme.TextColor,
+                Font = Enum.Font.Gotham,
+                TextSize = 11,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                BorderSizePixel = 0,
+                Parent = tabPage,
+            })
+            round(lbl, 6)
+            local LabelValue = {}
+            function LabelValue:Set(newText, newIcon, newColor)
+                local g = resolveIconGlyph(newIcon)
+                lbl.Text = (g ~= "" and (g .. "  ") or "  ") .. newText
+                if newColor then lbl.TextColor3 = newColor end
+            end
+            return LabelValue
+        end
+
+        -- CreateParagraph
+        function Tab:CreateParagraph(opts)
+            opts = opts or {}
+            local frame = create("Frame", {
+                Size = UDim2.new(1, 0, 0, 60),
+                BackgroundColor3 = SelectedTheme.ElementBackground,
+                BorderSizePixel = 0,
+                Parent = tabPage,
+            })
+            round(frame, 8)
+            stroke(frame, SelectedTheme.ElementStroke)
+
+            local titleL = create("TextLabel", {
+                Size = UDim2.new(1, -16, 0, 18), Position = UDim2.new(0, 8, 0, 6),
+                BackgroundTransparency = 1, Text = opts.Title or "Title",
+                TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.GothamBold,
+                TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
+            })
+            local content = create("TextLabel", {
+                Size = UDim2.new(1, -16, 0, 32), Position = UDim2.new(0, 8, 0, 24),
+                BackgroundTransparency = 1, Text = opts.Content or "",
+                TextColor3 = SelectedTheme.SubTextColor, Font = Enum.Font.Gotham,
+                TextSize = 11, TextWrapped = true,
+                TextXAlignment = Enum.TextXAlignment.Left, TextYAlignment = Enum.TextYAlignment.Top,
+                Parent = frame,
+            })
+
+            local ParagraphValue = {}
+            function ParagraphValue:Set(newOpts)
+                titleL.Text = newOpts.Title or ""
+                content.Text = newOpts.Content or ""
+            end
+            return ParagraphValue
+        end
+
+        -- CreateButton (icon supported)
         function Tab:CreateButton(opts)
             opts = opts or {}
+            local glyph = resolveIconGlyph(opts.Icon)
             local btn = create("TextButton", {
                 Size = UDim2.new(1, 0, 0, 36),
                 BackgroundColor3 = SelectedTheme.ElementBackground,
-                Text = opts.Name or "Button",
+                Text = (glyph ~= "" and (glyph .. "  ") or "") .. (opts.Name or "Button"),
                 TextColor3 = SelectedTheme.TextColor,
                 Font = Enum.Font.Gotham,
                 TextSize = 12,
@@ -715,71 +915,54 @@ function NriculLib:CreateGui(settings)
             btn.MouseLeave:Connect(function() tween(btn, TweenInfo.new(0.15), {BackgroundColor3 = SelectedTheme.ElementBackground}) end)
 
             btn.MouseButton1Click:Connect(function()
-                safeCall(opts.Callback)
+                local ok, err = safeCall(opts.Callback)
+                if not ok then
+                    local origText = btn.Text
+                    btn.Text = "Callback Error"
+                    tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)})
+                    task.wait(0.6)
+                    btn.Text = origText
+                    tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = SelectedTheme.ElementBackground})
+                end
             end)
 
             local ButtonValue = {}
-            function ButtonValue:Set(newName)
-                btn.Text = newName
-            end
+            function ButtonValue:Set(newName) btn.Text = newName end
             return ButtonValue
         end
 
-        -- =====================
         -- CreateToggle
-        -- =====================
         function Tab:CreateToggle(opts)
             opts = opts or {}
             local state = opts.CurrentValue or false
 
-            local frame = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 36),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Parent = tabPage,
-            })
-            round(frame, 8)
-            stroke(frame, SelectedTheme.ElementStroke)
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
-                Size = UDim2.new(1, -60, 1, 0),
-                Position = UDim2.new(0, 12, 0, 0),
-                BackgroundTransparency = 1,
-                Text = opts.Name or "Toggle",
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 12,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = frame,
+                Size = UDim2.new(1, -60, 1, 0), Position = UDim2.new(0, 12, 0, 0),
+                BackgroundTransparency = 1, Text = opts.Name or "Toggle",
+                TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
+                TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
             })
 
             local switchBg = create("Frame", {
-                Size = UDim2.new(0, 38, 0, 18),
-                Position = UDim2.new(1, -48, 0.5, -9),
+                Size = UDim2.new(0, 38, 0, 18), Position = UDim2.new(1, -48, 0.5, -9),
                 BackgroundColor3 = state and SelectedTheme.ToggleOn or SelectedTheme.ToggleOff,
-                BorderSizePixel = 0,
-                Parent = frame,
+                BorderSizePixel = 0, Parent = frame,
             })
             round(switchBg, 9)
 
             local knob = create("Frame", {
                 Size = UDim2.new(0, 14, 0, 14),
                 Position = state and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7),
-                BackgroundColor3 = Color3.new(1, 1, 1),
-                BorderSizePixel = 0,
-                Parent = switchBg,
+                BackgroundColor3 = Color3.new(1, 1, 1), BorderSizePixel = 0, Parent = switchBg,
             })
             round(knob, 7)
 
-            local interact = create("TextButton", {
-                Size = UDim2.new(1, 0, 1, 0),
-                BackgroundTransparency = 1,
-                Text = "",
-                Parent = frame,
-            })
+            local interact = create("TextButton", {Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, Text = "", Parent = frame})
 
             local ToggleValue = {CurrentValue = state}
-
             local function applyVisual(v)
                 tween(switchBg, QUICK, {BackgroundColor3 = v and SelectedTheme.ToggleOn or SelectedTheme.ToggleOff})
                 tween(knob, QUICK, {Position = v and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)})
@@ -797,75 +980,43 @@ function NriculLib:CreateGui(settings)
                 safeCall(opts.Callback, v)
             end
 
-            if opts.Flag then
-                NriculLib.Flags[opts.Flag] = ToggleValue
-            end
-
+            if opts.Flag then NriculLib.Flags[opts.Flag] = ToggleValue end
             return ToggleValue
         end
 
-        -- =====================
         -- CreateSlider
-        -- =====================
         function Tab:CreateSlider(opts)
             opts = opts or {}
             local range = opts.Range or {0, 100}
             local increment = opts.Increment or 1
             local current = opts.CurrentValue or range[1]
 
-            local frame = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 50),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Parent = tabPage,
-            })
-            round(frame, 8)
-            stroke(frame, SelectedTheme.ElementStroke)
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 50), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
-                Size = UDim2.new(1, -16, 0, 20),
-                Position = UDim2.new(0, 12, 0, 4),
-                BackgroundTransparency = 1,
-                Text = opts.Name or "Slider",
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 12,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = frame,
+                Size = UDim2.new(1, -16, 0, 20), Position = UDim2.new(0, 12, 0, 4),
+                BackgroundTransparency = 1, Text = opts.Name or "Slider",
+                TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
+                TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
             })
 
             local valueLabel = create("TextLabel", {
-                Size = UDim2.new(0, 100, 0, 20),
-                Position = UDim2.new(1, -112, 0, 4),
-                BackgroundTransparency = 1,
-                Text = tostring(current) .. " " .. (opts.Suffix or ""),
-                TextColor3 = SelectedTheme.SubTextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 11,
-                TextXAlignment = Enum.TextXAlignment.Right,
-                Parent = frame,
+                Size = UDim2.new(0, 100, 0, 20), Position = UDim2.new(1, -112, 0, 4),
+                BackgroundTransparency = 1, Text = tostring(current) .. " " .. (opts.Suffix or ""),
+                TextColor3 = SelectedTheme.SubTextColor, Font = Enum.Font.Gotham,
+                TextSize = 11, TextXAlignment = Enum.TextXAlignment.Right, Parent = frame,
             })
 
-            local track = create("Frame", {
-                Size = UDim2.new(1, -24, 0, 6),
-                Position = UDim2.new(0, 12, 1, -16),
-                BackgroundColor3 = SelectedTheme.InputBackground,
-                BorderSizePixel = 0,
-                Parent = frame,
-            })
+            local track = create("Frame", {Size = UDim2.new(1, -24, 0, 6), Position = UDim2.new(0, 12, 1, -16), BackgroundColor3 = SelectedTheme.InputBackground, BorderSizePixel = 0, Parent = frame})
             round(track, 3)
 
             local fillFrac = (current - range[1]) / (range[2] - range[1])
-            local fill = create("Frame", {
-                Size = UDim2.new(math.clamp(fillFrac, 0, 1), 0, 1, 0),
-                BackgroundColor3 = SelectedTheme.Accent,
-                BorderSizePixel = 0,
-                Parent = track,
-            })
+            local fill = create("Frame", {Size = UDim2.new(math.clamp(fillFrac, 0, 1), 0, 1, 0), BackgroundColor3 = SelectedTheme.Accent, BorderSizePixel = 0, Parent = track})
             round(fill, 3)
 
             local SliderValue = {CurrentValue = current}
-            local dragging = false
+            local dragging2 = false
 
             local function setFromX(xPos)
                 local rel = math.clamp((xPos - track.AbsolutePosition.X) / track.AbsoluteSize.X, 0, 1)
@@ -882,18 +1033,18 @@ function NriculLib:CreateGui(settings)
 
             track.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    dragging = true
+                    dragging2 = true
                     setFromX(input.Position.X)
                 end
             end)
             UserInputService.InputChanged:Connect(function(input)
-                if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                if dragging2 and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
                     setFromX(input.Position.X)
                 end
             end)
             UserInputService.InputEnded:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    dragging = false
+                    dragging2 = false
                 end
             end)
 
@@ -905,65 +1056,37 @@ function NriculLib:CreateGui(settings)
                 safeCall(opts.Callback, v)
             end
 
-            if opts.Flag then
-                NriculLib.Flags[opts.Flag] = SliderValue
-            end
-
+            if opts.Flag then NriculLib.Flags[opts.Flag] = SliderValue end
             return SliderValue
         end
 
-        -- =====================
         -- CreateInput
-        -- =====================
         function Tab:CreateInput(opts)
             opts = opts or {}
-
-            local frame = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 36),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Parent = tabPage,
-            })
-            round(frame, 8)
-            stroke(frame, SelectedTheme.ElementStroke)
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
-                Size = UDim2.new(0.42, 0, 1, 0),
-                Position = UDim2.new(0, 12, 0, 0),
-                BackgroundTransparency = 1,
-                Text = opts.Name or "Input",
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 12,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = frame,
+                Size = UDim2.new(0.42, 0, 1, 0), Position = UDim2.new(0, 12, 0, 0),
+                BackgroundTransparency = 1, Text = opts.Name or "Input",
+                TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
+                TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
             })
 
             local box = create("TextBox", {
-                Size = UDim2.new(0.52, 0, 0, 26),
-                Position = UDim2.new(0.46, 0, 0.5, -13),
-                BackgroundColor3 = SelectedTheme.InputBackground,
-                Text = opts.CurrentValue or "",
-                PlaceholderText = opts.PlaceholderText or "",
-                TextColor3 = SelectedTheme.TextColor,
-                PlaceholderColor3 = SelectedTheme.SubTextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 11,
-                ClearTextOnFocus = false,
-                BorderSizePixel = 0,
-                Parent = frame,
+                Size = UDim2.new(0.52, 0, 0, 26), Position = UDim2.new(0.46, 0, 0.5, -13),
+                BackgroundColor3 = SelectedTheme.InputBackground, Text = opts.CurrentValue or "",
+                PlaceholderText = opts.PlaceholderText or "", TextColor3 = SelectedTheme.TextColor,
+                PlaceholderColor3 = SelectedTheme.SubTextColor, Font = Enum.Font.Gotham,
+                TextSize = 11, ClearTextOnFocus = false, BorderSizePixel = 0, Parent = frame,
             })
-            round(box, 6)
-            stroke(box, SelectedTheme.ElementStroke)
+            round(box, 6); stroke(box, SelectedTheme.ElementStroke)
 
             local InputValue = {CurrentValue = opts.CurrentValue or ""}
-
             box.FocusLost:Connect(function()
                 InputValue.CurrentValue = box.Text
                 safeCall(opts.Callback, box.Text)
-                if opts.RemoveTextAfterFocusLost then
-                    box.Text = ""
-                end
+                if opts.RemoveTextAfterFocusLost then box.Text = "" end
             end)
 
             function InputValue:Set(text)
@@ -972,16 +1095,11 @@ function NriculLib:CreateGui(settings)
                 safeCall(opts.Callback, text)
             end
 
-            if opts.Flag then
-                NriculLib.Flags[opts.Flag] = InputValue
-            end
-
+            if opts.Flag then NriculLib.Flags[opts.Flag] = InputValue end
             return InputValue
         end
 
-        -- =====================
         -- CreateDropdown
-        -- =====================
         function Tab:CreateDropdown(opts)
             opts = opts or {}
             local options = opts.Options or {}
@@ -990,82 +1108,39 @@ function NriculLib:CreateGui(settings)
             if typeof(current) == "string" then current = {current} end
             current = current or {}
 
-            local frame = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 36),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                ClipsDescendants = false,
-                Parent = tabPage,
-            })
-            round(frame, 8)
-            stroke(frame, SelectedTheme.ElementStroke)
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, ClipsDescendants = false, Parent = tabPage})
+            round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
-                Size = UDim2.new(0.42, 0, 1, 0),
-                Position = UDim2.new(0, 12, 0, 0),
-                BackgroundTransparency = 1,
-                Text = opts.Name or "Dropdown",
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 12,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = frame,
+                Size = UDim2.new(0.42, 0, 1, 0), Position = UDim2.new(0, 12, 0, 0),
+                BackgroundTransparency = 1, Text = opts.Name or "Dropdown",
+                TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
+                TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
             })
 
-            local selectedLabel = current[1] or (multi and "None" or (options[1] or "None"))
-            if not opts.CurrentOption then current = {} end
-
+            local selectedLabel = current[1] or "None"
             local valBtn = create("TextButton", {
-                Size = UDim2.new(0.46, 0, 0, 26),
-                Position = UDim2.new(0.52, 0, 0.5, -13),
-                BackgroundColor3 = SelectedTheme.InputBackground,
-                Text = selectedLabel .. "  v",
-                TextColor3 = SelectedTheme.Accent,
-                Font = Enum.Font.GothamBold,
-                TextSize = 11,
-                AutoButtonColor = false,
-                BorderSizePixel = 0,
-                Parent = frame,
+                Size = UDim2.new(0.46, 0, 0, 26), Position = UDim2.new(0.52, 0, 0.5, -13),
+                BackgroundColor3 = SelectedTheme.InputBackground, Text = selectedLabel .. "  v",
+                TextColor3 = SelectedTheme.Accent, Font = Enum.Font.GothamBold, TextSize = 11,
+                AutoButtonColor = false, BorderSizePixel = 0, Parent = frame,
             })
-            round(valBtn, 6)
-            stroke(valBtn, SelectedTheme.ElementStroke)
+            round(valBtn, 6); stroke(valBtn, SelectedTheme.ElementStroke)
 
-            -- floating list, parented to screenGui so it renders above everything
-            local listPanel = create("Frame", {
-                Size = UDim2.new(0, 160, 0, 0),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Visible = false,
-                ZIndex = 100,
-                Parent = screenGui,
-            })
-            round(listPanel, 8)
-            stroke(listPanel, SelectedTheme.ElementStroke)
+            local listPanel = create("Frame", {Size = UDim2.new(0, 160, 0, 0), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Visible = false, ZIndex = 100, Parent = screenGui})
+            round(listPanel, 8); stroke(listPanel, SelectedTheme.ElementStroke)
 
-            local listLayout = create("UIListLayout", {Parent = listPanel})
-            local listScroll = create("ScrollingFrame", {
-                Size = UDim2.new(1, 0, 1, 0),
-                BackgroundTransparency = 1,
-                ScrollBarThickness = 2,
-                BorderSizePixel = 0,
-                ZIndex = 100,
-                Parent = listPanel,
-            })
-            local listScrollLayout = create("UIListLayout", {Parent = listScroll})
+            local listScroll = create("ScrollingFrame", {Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1, ScrollBarThickness = 2, BorderSizePixel = 0, ZIndex = 100, Parent = listPanel})
+            create("UIListLayout", {Parent = listScroll})
 
             local DropdownValue = {CurrentOption = current, Options = options}
-
             local optionButtons = {}
 
             local function refreshSelectedLabel()
                 if multi then
-                    if #DropdownValue.CurrentOption == 0 then
-                        valBtn.Text = "None  v"
-                    elseif #DropdownValue.CurrentOption == 1 then
-                        valBtn.Text = DropdownValue.CurrentOption[1] .. "  v"
-                    else
-                        valBtn.Text = "Various  v"
-                    end
+                    if #DropdownValue.CurrentOption == 0 then valBtn.Text = "None  v"
+                    elseif #DropdownValue.CurrentOption == 1 then valBtn.Text = DropdownValue.CurrentOption[1] .. "  v"
+                    else valBtn.Text = "Various  v" end
                 else
                     valBtn.Text = (DropdownValue.CurrentOption[1] or "None") .. "  v"
                 end
@@ -1074,23 +1149,14 @@ function NriculLib:CreateGui(settings)
             local function buildOptions()
                 for _, b in ipairs(optionButtons) do b:Destroy() end
                 optionButtons = {}
-
                 for _, opt in ipairs(DropdownValue.Options) do
                     local ob = create("TextButton", {
                         Size = UDim2.new(1, 0, 0, 28),
-                        BackgroundColor3 = table.find(DropdownValue.CurrentOption, opt)
-                            and SelectedTheme.Accent or SelectedTheme.ElementBackground,
-                        Text = "  " .. opt,
-                        TextColor3 = SelectedTheme.TextColor,
-                        Font = Enum.Font.Gotham,
-                        TextSize = 11,
-                        TextXAlignment = Enum.TextXAlignment.Left,
-                        AutoButtonColor = false,
-                        BorderSizePixel = 0,
-                        ZIndex = 101,
-                        Parent = listScroll,
+                        BackgroundColor3 = table.find(DropdownValue.CurrentOption, opt) and SelectedTheme.Accent or SelectedTheme.ElementBackground,
+                        Text = "  " .. opt, TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
+                        TextSize = 11, TextXAlignment = Enum.TextXAlignment.Left,
+                        AutoButtonColor = false, BorderSizePixel = 0, ZIndex = 101, Parent = listScroll,
                     })
-
                     ob.MouseButton1Click:Connect(function()
                         if multi then
                             local idx = table.find(DropdownValue.CurrentOption, opt)
@@ -1103,19 +1169,15 @@ function NriculLib:CreateGui(settings)
                             end
                         else
                             DropdownValue.CurrentOption = {opt}
-                            for _, other in ipairs(optionButtons) do
-                                other.BackgroundColor3 = SelectedTheme.ElementBackground
-                            end
+                            for _, other in ipairs(optionButtons) do other.BackgroundColor3 = SelectedTheme.ElementBackground end
                             ob.BackgroundColor3 = SelectedTheme.Accent
                             listPanel.Visible = false
                         end
                         refreshSelectedLabel()
                         safeCall(opts.Callback, DropdownValue.CurrentOption)
                     end)
-
                     table.insert(optionButtons, ob)
                 end
-
                 listPanel.Size = UDim2.new(0, 160, 0, math.min(#DropdownValue.Options * 28, 180))
             end
 
@@ -1144,115 +1206,54 @@ function NriculLib:CreateGui(settings)
                 buildOptions()
             end
 
-            if opts.Flag then
-                NriculLib.Flags[opts.Flag] = DropdownValue
-            end
-
+            if opts.Flag then NriculLib.Flags[opts.Flag] = DropdownValue end
             return DropdownValue
         end
 
-        -- =====================
         -- CreateColorPicker
-        -- =====================
         function Tab:CreateColorPicker(opts)
             opts = opts or {}
             local color = opts.Color or Color3.new(1, 1, 1)
 
-            local frame = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 36),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Parent = tabPage,
-            })
-            round(frame, 8)
-            stroke(frame, SelectedTheme.ElementStroke)
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
-                Size = UDim2.new(1, -60, 1, 0),
-                Position = UDim2.new(0, 12, 0, 0),
-                BackgroundTransparency = 1,
-                Text = opts.Name or "Color Picker",
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 12,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = frame,
+                Size = UDim2.new(1, -60, 1, 0), Position = UDim2.new(0, 12, 0, 0),
+                BackgroundTransparency = 1, Text = opts.Name or "Color Picker",
+                TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
+                TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
             })
 
             local swatch = create("TextButton", {
-                Size = UDim2.new(0, 36, 0, 22),
-                Position = UDim2.new(1, -48, 0.5, -11),
-                BackgroundColor3 = color,
-                Text = "",
-                AutoButtonColor = false,
-                BorderSizePixel = 0,
-                Parent = frame,
+                Size = UDim2.new(0, 36, 0, 22), Position = UDim2.new(1, -48, 0.5, -11),
+                BackgroundColor3 = color, Text = "", AutoButtonColor = false, BorderSizePixel = 0, Parent = frame,
             })
-            round(swatch, 6)
-            stroke(swatch, SelectedTheme.ElementStroke)
+            round(swatch, 6); stroke(swatch, SelectedTheme.ElementStroke)
 
-            -- floating RGB panel
-            local panel = create("Frame", {
-                Size = UDim2.new(0, 200, 0, 140),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Visible = false,
-                ZIndex = 100,
-                Parent = screenGui,
-            })
-            round(panel, 8)
-            stroke(panel, SelectedTheme.ElementStroke)
+            local panel = create("Frame", {Size = UDim2.new(0, 200, 0, 140), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Visible = false, ZIndex = 100, Parent = screenGui})
+            round(panel, 8); stroke(panel, SelectedTheme.ElementStroke)
 
-            local preview = create("Frame", {
-                Size = UDim2.new(1, -20, 0, 40),
-                Position = UDim2.new(0, 10, 0, 10),
-                BackgroundColor3 = color,
-                BorderSizePixel = 0,
-                ZIndex = 101,
-                Parent = panel,
-            })
+            local preview = create("Frame", {Size = UDim2.new(1, -20, 0, 40), Position = UDim2.new(0, 10, 0, 10), BackgroundColor3 = color, BorderSizePixel = 0, ZIndex = 101, Parent = panel})
             round(preview, 6)
 
             local ColorValue = {Color = color}
 
             local function makeRGBRow(labelText, yPos, channel)
-                local row = create("Frame", {
-                    Size = UDim2.new(1, -20, 0, 24),
-                    Position = UDim2.new(0, 10, 0, yPos),
-                    BackgroundTransparency = 1,
-                    ZIndex = 101,
-                    Parent = panel,
-                })
-                create("TextLabel", {
-                    Size = UDim2.new(0, 20, 1, 0),
-                    BackgroundTransparency = 1,
-                    Text = labelText,
-                    TextColor3 = SelectedTheme.SubTextColor,
-                    Font = Enum.Font.GothamBold,
-                    TextSize = 11,
-                    ZIndex = 102,
-                    Parent = row,
-                })
+                local row = create("Frame", {Size = UDim2.new(1, -20, 0, 24), Position = UDim2.new(0, 10, 0, yPos), BackgroundTransparency = 1, ZIndex = 101, Parent = panel})
+                create("TextLabel", {Size = UDim2.new(0, 20, 1, 0), BackgroundTransparency = 1, Text = labelText, TextColor3 = SelectedTheme.SubTextColor, Font = Enum.Font.GothamBold, TextSize = 11, ZIndex = 102, Parent = row})
                 local box = create("TextBox", {
-                    Size = UDim2.new(1, -26, 1, 0),
-                    Position = UDim2.new(0, 26, 0, 0),
-                    BackgroundColor3 = SelectedTheme.InputBackground,
-                    Text = tostring(math.floor(channel * 255)),
-                    TextColor3 = SelectedTheme.TextColor,
-                    Font = Enum.Font.Gotham,
-                    TextSize = 11,
-                    BorderSizePixel = 0,
-                    ZIndex = 102,
-                    Parent = row,
+                    Size = UDim2.new(1, -26, 1, 0), Position = UDim2.new(0, 26, 0, 0),
+                    BackgroundColor3 = SelectedTheme.InputBackground, Text = tostring(math.floor(channel * 255)),
+                    TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham, TextSize = 11, BorderSizePixel = 0, ZIndex = 102, Parent = row,
                 })
                 round(box, 4)
                 return box
             end
 
-            local r, g, b = color.R, color.G, color.B
-            local rBox = makeRGBRow("R", 58, r)
-            local gBox = makeRGBRow("G", 86, g)
-            local bBox = makeRGBRow("B", 114, b)
+            local rBox = makeRGBRow("R", 58, color.R)
+            local gBox = makeRGBRow("G", 86, color.G)
+            local bBox = makeRGBRow("B", 114, color.B)
 
             local function applyFromBoxes()
                 local rv = tonumber(rBox.Text) or 255
@@ -1287,59 +1288,35 @@ function NriculLib:CreateGui(settings)
                 safeCall(opts.Callback, newColor)
             end
 
-            if opts.Flag then
-                NriculLib.Flags[opts.Flag] = ColorValue
-            end
-
+            if opts.Flag then NriculLib.Flags[opts.Flag] = ColorValue end
             return ColorValue
         end
 
-        -- =====================
         -- CreateKeybind
-        -- =====================
         function Tab:CreateKeybind(opts)
             opts = opts or {}
             local currentKey = opts.CurrentKeybind or "None"
             local listening = false
 
-            local frame = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 36),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Parent = tabPage,
-            })
-            round(frame, 8)
-            stroke(frame, SelectedTheme.ElementStroke)
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
-                Size = UDim2.new(0.5, 0, 1, 0),
-                Position = UDim2.new(0, 12, 0, 0),
-                BackgroundTransparency = 1,
-                Text = opts.Name or "Keybind",
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 12,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = frame,
+                Size = UDim2.new(0.5, 0, 1, 0), Position = UDim2.new(0, 12, 0, 0),
+                BackgroundTransparency = 1, Text = opts.Name or "Keybind",
+                TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
+                TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
             })
 
             local keyBtn = create("TextButton", {
-                Size = UDim2.new(0, 80, 0, 24),
-                Position = UDim2.new(1, -92, 0.5, -12),
-                BackgroundColor3 = SelectedTheme.InputBackground,
-                Text = currentKey,
-                TextColor3 = SelectedTheme.Accent,
-                Font = Enum.Font.GothamBold,
-                TextSize = 11,
-                AutoButtonColor = false,
-                BorderSizePixel = 0,
-                Parent = frame,
+                Size = UDim2.new(0, 80, 0, 24), Position = UDim2.new(1, -92, 0.5, -12),
+                BackgroundColor3 = SelectedTheme.InputBackground, Text = currentKey,
+                TextColor3 = SelectedTheme.Accent, Font = Enum.Font.GothamBold, TextSize = 11,
+                AutoButtonColor = false, BorderSizePixel = 0, Parent = frame,
             })
-            round(keyBtn, 6)
-            stroke(keyBtn, SelectedTheme.ElementStroke)
+            round(keyBtn, 6); stroke(keyBtn, SelectedTheme.ElementStroke)
 
             local KeybindValue = {CurrentKeybind = currentKey}
-
             keyBtn.MouseButton1Click:Connect(function()
                 listening = true
                 keyBtn.Text = "..."
@@ -1352,16 +1329,13 @@ function NriculLib:CreateGui(settings)
                     KeybindValue.CurrentKeybind = name
                     keyBtn.Text = name
                     safeCall(opts.Callback, name)
-                elseif not listening and not gpe and opts.CurrentKeybind then
+                elseif not listening and not gpe and KeybindValue.CurrentKeybind ~= "None" then
                     local kc = Enum.KeyCode[KeybindValue.CurrentKeybind]
-                    if kc and input.KeyCode == kc then
-                        if not opts.HoldToInteract then
-                            safeCall(opts.Callback, true)
-                        end
+                    if kc and input.KeyCode == kc and not opts.HoldToInteract then
+                        safeCall(opts.Callback, true)
                     end
                 end
             end)
-
             table.insert(Window._connections, conn)
 
             function KeybindValue:Set(newKey)
@@ -1370,102 +1344,16 @@ function NriculLib:CreateGui(settings)
                 safeCall(opts.Callback, newKey)
             end
 
-            if opts.Flag then
-                NriculLib.Flags[opts.Flag] = KeybindValue
-            end
-
+            if opts.Flag then NriculLib.Flags[opts.Flag] = KeybindValue end
             return KeybindValue
-        end
-
-        -- =====================
-        -- CreateLabel
-        -- =====================
-        function Tab:CreateLabel(text, color)
-            local lbl = create("TextLabel", {
-                Size = UDim2.new(1, 0, 0, 28),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                Text = "  " .. text,
-                TextColor3 = color or SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 11,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                BorderSizePixel = 0,
-                Parent = tabPage,
-            })
-            round(lbl, 6)
-
-            local LabelValue = {}
-            function LabelValue:Set(newText, newColor)
-                lbl.Text = "  " .. newText
-                if newColor then lbl.TextColor3 = newColor end
-            end
-            return LabelValue
-        end
-
-        -- =====================
-        -- CreateParagraph
-        -- =====================
-        function Tab:CreateParagraph(opts)
-            opts = opts or {}
-            local frame = create("Frame", {
-                Size = UDim2.new(1, 0, 0, 60),
-                BackgroundColor3 = SelectedTheme.ElementBackground,
-                BorderSizePixel = 0,
-                Parent = tabPage,
-            })
-            round(frame, 8)
-            stroke(frame, SelectedTheme.ElementStroke)
-
-            create("TextLabel", {
-                Size = UDim2.new(1, -16, 0, 18),
-                Position = UDim2.new(0, 8, 0, 6),
-                BackgroundTransparency = 1,
-                Text = opts.Title or "Title",
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.GothamBold,
-                TextSize = 12,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                Parent = frame,
-            })
-
-            local content = create("TextLabel", {
-                Size = UDim2.new(1, -16, 0, 32),
-                Position = UDim2.new(0, 8, 0, 24),
-                BackgroundTransparency = 1,
-                Text = opts.Content or "",
-                TextColor3 = SelectedTheme.SubTextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 11,
-                TextWrapped = true,
-                TextXAlignment = Enum.TextXAlignment.Left,
-                TextYAlignment = Enum.TextYAlignment.Top,
-                Parent = frame,
-            })
-
-            local ParagraphValue = {}
-            function ParagraphValue:Set(newOpts)
-                frame:FindFirstChildOfClass("TextLabel").Text = newOpts.Title or ""
-                content.Text = newOpts.Content or ""
-            end
-            return ParagraphValue
         end
 
         return Tab
     end
 
-    -- =====================
-    -- THEME SWITCH AT RUNTIME
-    -- =====================
     function Window:SetTheme(themeName)
         if NriculLib.Theme[themeName] then
             SelectedTheme = NriculLib.Theme[themeName]
-            main.BackgroundColor3 = SelectedTheme.Background
-            topbar.BackgroundColor3 = SelectedTheme.Topbar
-            topbarFix.BackgroundColor3 = SelectedTheme.Topbar
-            tabList.BackgroundColor3 = SelectedTheme.Topbar
-            iconCircle.BackgroundColor3 = SelectedTheme.Accent
-            titleLabel.TextColor3 = SelectedTheme.TextColor
-            -- note: existing elements keep their colors; new ones use new theme
         end
     end
 
