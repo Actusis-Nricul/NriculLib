@@ -120,7 +120,7 @@ local IconGlyphs = {
     sliders = "🎛", toggleleft = "◯", toggleright = "⬤",
     layers = "▤", maximize = "⛶", minimize = "⛶", expand = "⤢", shrink = "⤡",
     monitor = "🖥", smartphone = "📱", tablet = "📱", laptop = "💻",
-    printer = "🖨", keyboard = "⌨", mouse = "🖱",
+    printer = "🖨", keyboard = "⌨", mouse = "🖱", galaxy = "🌌",
 }
 
 local function resolveIconGlyph(icon)
