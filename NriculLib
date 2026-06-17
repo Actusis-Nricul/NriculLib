@@ -114,7 +114,7 @@ local IconGlyphs = {
     banknote = "💵", piggybank = "🐖", receipt = "🧾", percent = "%",
 
     -- misc
-    sparkles = "✨", sparkle = "✦", flameicon = "🔥", lightbulb = "💡",
+    sparkles = "✨", sparkle = "✨", flameicon = "🔥", flame = "🔥", fire = "🔥", lightbulb = "💡",
     palette = "🎨", paintbrush = "🖌", scissors = "✂", ruler = "📏",
     wrench = "🔧", hammer = "🔨", tool = "🛠", settings2 = "⚙",
     sliders = "🎛", toggleleft = "◯", toggleright = "⬤",
