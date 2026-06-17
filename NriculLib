@@ -846,7 +846,7 @@ function NriculLib:CreateGui(settings)
             Parent = tabBtn,
         })
 
-        local tabPage = create("ScrollingFrame", {
+local tabPage = create("ScrollingFrame", {
             Size = UDim2.new(1, 0, 1, 0),
             BackgroundTransparency = 1,
             ScrollBarThickness = 3,
@@ -855,7 +855,17 @@ function NriculLib:CreateGui(settings)
             Visible = false,
             Parent = contentArea,
         })
-        local pageLayout = create("UIListLayout", {Padding = UDim.new(0, 6), Parent = tabPage})
+        local pageLayout = create("UIListLayout", {
+            Padding = UDim.new(0, 6),
+            SortOrder = Enum.SortOrder.LayoutOrder,
+            Parent = tabPage,
+        })
+
+        local orderCounter = 0
+        local function nextOrder()
+            orderCounter = orderCounter + 1
+            return orderCounter
+        end
         create("UIPadding", {
             PaddingTop = UDim.new(0, 10), PaddingLeft = UDim.new(0, 10),
             PaddingRight = UDim.new(0, 14), PaddingBottom = UDim.new(0, 10),
@@ -893,7 +903,7 @@ function NriculLib:CreateGui(settings)
 
         -- CreateSection
         function Tab:CreateSection(sectionName)
-            local sec = create("Frame", {Size = UDim2.new(1, 0, 0, 22), BackgroundTransparency = 1, Parent = tabPage})
+            local sec = create("Frame", {Size = UDim2.new(1, 0, 0, 22), BackgroundTransparency = 1, LayoutOrder = nextOrder(), Parent = tabPage})
             local lbl = create("TextLabel", {
                 Size = UDim2.new(1, 0, 1, 0), BackgroundTransparency = 1,
                 Text = sectionName:upper(), TextColor3 = SelectedTheme.Accent,
@@ -911,6 +921,7 @@ function NriculLib:CreateGui(settings)
                 Size = UDim2.new(1, 0, 0, 1),
                 BackgroundColor3 = SelectedTheme.ElementStroke,
                 BorderSizePixel = 0,
+                LayoutOrder = nextOrder(),
                 Parent = tabPage,
             })
             local DividerValue = {}
@@ -930,6 +941,7 @@ function NriculLib:CreateGui(settings)
                 TextSize = 11,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
+                LayoutOrder = nextOrder(),
                 Parent = tabPage,
             })
             round(lbl, 6)
@@ -949,6 +961,7 @@ function NriculLib:CreateGui(settings)
                 Size = UDim2.new(1, 0, 0, 60),
                 BackgroundColor3 = SelectedTheme.ElementBackground,
                 BorderSizePixel = 0,
+                LayoutOrder = nextOrder(),
                 Parent = tabPage,
             })
             round(frame, 8)
@@ -990,6 +1003,7 @@ function NriculLib:CreateGui(settings)
                 TextSize = 12,
                 AutoButtonColor = false,
                 BorderSizePixel = 0,
+                LayoutOrder = nextOrder(),
                 Parent = tabPage,
             })
             round(btn, 8)
@@ -1020,7 +1034,7 @@ function NriculLib:CreateGui(settings)
             opts = opts or {}
             local state = opts.CurrentValue or false
 
-            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, LayoutOrder = nextOrder(), Parent = tabPage})
             round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
@@ -1075,7 +1089,7 @@ function NriculLib:CreateGui(settings)
             local increment = opts.Increment or 1
             local current = opts.CurrentValue or range[1]
 
-            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 50), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 50), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, LayoutOrder = nextOrder(), Parent = tabPage})
             round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
@@ -1147,7 +1161,7 @@ function NriculLib:CreateGui(settings)
         -- CreateInput
         function Tab:CreateInput(opts)
             opts = opts or {}
-            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, LayoutOrder = nextOrder(), Parent = tabPage})
             round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
@@ -1192,7 +1206,7 @@ function NriculLib:CreateGui(settings)
             if typeof(current) == "string" then current = {current} end
             current = current or {}
 
-            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, ClipsDescendants = false, Parent = tabPage})
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, ClipsDescendants = false, LayoutOrder = nextOrder(), Parent = tabPage})
             round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
@@ -1299,7 +1313,7 @@ function NriculLib:CreateGui(settings)
             opts = opts or {}
             local color = opts.Color or Color3.new(1, 1, 1)
 
-            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, LayoutOrder = nextOrder(), Parent = tabPage})
             round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
@@ -1382,7 +1396,7 @@ function NriculLib:CreateGui(settings)
             local currentKey = opts.CurrentKeybind or "None"
             local listening = false
 
-            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, Parent = tabPage})
+            local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, LayoutOrder = nextOrder(), Parent = tabPage})
             round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
             create("TextLabel", {
