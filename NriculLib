@@ -77,7 +77,7 @@ local IconGlyphs = {
     plus = "+", pluscircle = "⊕", plussquare = "⊞",
     minus = "-", minuscircle = "⊖", minussquare = "⊟",
     info = "ℹ️", help = "❓", helpcircle = "❓", question = "❓",
-    warning = "⚠️", alerttriangle = "⚠️", alertcircle = "⚠️", alertoctagon = "⛔",
+    warning = "⚠️", alerttriangle = "⚠️", alert = "⚠️", alertoctagon = "⛔",
     ban = "⛔", octagonalert = "⛔", error = "❌", success = "✅",
     pending = "⏳", loading = "⏳", processing = "⚙️", done = "✅",
     failed = "❌", blocked = "🚫", allowed = "✅", denied = "⛔",
