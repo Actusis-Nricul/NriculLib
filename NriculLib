@@ -1,9 +1,9 @@
 --[[
     NriculLib
-    by Actusis-Nricul
+    By Actusis-Nricul
 
     Load with:
-    local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib.lua'))()
+    local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib'))()
 ]]
 
 local NriculLib = {}
