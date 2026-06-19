@@ -163,6 +163,7 @@ local IconGlyphs = {
     dragon = "🐉", knight = "⚔️", wizard = "🧙", warrior = "🪖", rogue = "🗡️",
     healer = "💊", tank = "🛡️", boss = "👹", monster = "👾", loot = "💰",
     xp = "⭐", level = "📈", quest = "📜", respawn = "🔄", spawn = "🌀",
+    divine = "🔱", trident = "🔱", tridenthead = "🔱", atlantis = "🔱",
 
     -- finance
     dollarsign = "$", creditcard = "💳", wallet = "👛", coins = "🪙",
