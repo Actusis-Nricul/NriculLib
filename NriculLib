@@ -40,7 +40,7 @@ local IconGlyphs = {
     userminus = "-🙂", userx = "✕🙂", person = "😀", personstanding = "🚶",
     crown = "♛", baby = "👶", lifter = "🏋️", workout = "🏋️", weight = "🏋️",
     weightlift = "🏋️", weightlifter = "🏋️", speed = "🏃", run = "🏃",
-    running = "🏃", spe = "🏃", dancer = "💃", swimmer = "🏊", cyclist = "🚴",
+    running = "🏃", sped = "🏃", dancer = "💃", swimmer = "🏊", cyclist = "🚴",
     climber = "🧗", skier = "⛷️", surfer = "🏄", archer = "🏹", ninja = "🥷",
     detective = "🕵️", guard = "💂", pilot = "🧑‍✈️", astronaut = "👨‍🚀",
     scientist = "🧑‍🔬", teacher = "🧑‍🏫", chef = "🧑‍🍳", farmer = "🧑‍🌾",
