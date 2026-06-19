@@ -92,6 +92,7 @@ local IconGlyphs = {
     cornerupright = "↱", cornerupleft = "↰", cornerdownright = "↳", cornerdownleft = "↲",
     circlearrow = "🔄", looparrow = "🔁", backarrow = "↩️", forwardarrow = "↪️",
     returnarrow = "↩️", enterkey = "⏎", swaphoriz = "⇄", swapvert = "⇅",
+    rebirth = "🔄", loop = "🔄", redo = "🔄",
 
     -- time
     clock = "🕐", clock1 = "🕐", calendar = "📅", calendardays = "📅",
