@@ -23,7 +23,7 @@ local Window = Lib:CreateGui({
 
         Enabled = false,
 
-        Invite = "invitecodehere",
+        Invite = "invitecodehere", -- has to be ABCD for discord.gg/ABCD for example
 
         RememberJoins = true,
 
