@@ -46,6 +46,7 @@ local IconGlyphs = {
     scientist = "🧑‍🔬", teacher = "🧑‍🏫", chef = "🧑‍🍳", farmer = "🧑‍🌾",
     angel = "👼", fairy = "🧚", mage = "🧙", vampire = "🧛", zombie = "🧟",
     robot = "🤖", alien = "👽", clown = "🤡", ghost = "👻",
+    smile = "😀", smile2 = "😃", smile3 = "😄",
 
     -- actions / media
     play = "▶", pause = "❚❚", stop = "■", skipback = "⏮", skipforward = "⏭",
