@@ -3,7 +3,7 @@
     By Actusis-Nricul
 
     Load with:
-    local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib'))()
+    local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib.luau'))()
 ]]
 
 local NriculLib = {}
