@@ -194,6 +194,47 @@ local IconGlyphs = {
     cat = "🐱", dog = "🐶", fox = "🦊", wolf = "🐺", bear = "🐻",
     lion = "🦁", tiger = "🐯", snake = "🐍", eagle = "🦅", owl = "🦉",
     penguin = "🐧", unicorn = "🦄", phoenix = "🦅", kraken = "🐙",
+
+    -- tech / cyber
+    cyber = "🧠", ai = "🤖", neural = "🧬", chip = "💠", circuit = "🔌",
+    serverrack = "🗄️", cloud = "☁️", cloudsync = "☁️🔄", firewall = "🧱",
+    vpn = "🔐", api = "🔗", sdk = "🧩", database2 = "🗃️",
+
+    -- UI / dev
+    code2 = "🧑‍💻", terminal2 = "💻", console = "🖥️", inspect = "🔍",
+    inspect2 = "🕵️", commit = "📌", push = "🚀", pull = "⬇️",
+    branch2 = "🌿", merge2 = "🔀", fork = "🍴",
+
+    -- emotions / reactions
+    love = "😍", hype = "🤩", sad = "😢", cry = "😭", laugh = "😂",
+    confused = "😵", angry = "😡", dead = "💀", shocked = "😱",
+    chill = "😎", sleepy = "😴",
+
+    -- animals expansion
+    raccoon = "🦝", deer = "🦌", goat = "🐐", horse = "🐴", cow = "🐮",
+    duck = "🦆", fish = "🐟", shark = "🦈", whale = "🐋", octopus = "🐙",
+
+    -- fantasy expansion
+    fairy2 = "🧚‍♂️", genie = "🧞", mermaid = "🧜", troll = "🧌",
+    alien2 = "👾", demon = "👹", angel2 = "😇",
+
+    -- objects expansion
+    key2 = "🗝️", lock2 = "🔐", hammer2 = "🔨", axe2 = "🪓",
+    ring = "💍", necklace = "📿", watch = "⌚", glasses = "👓",
+    chair = "🪑", bed = "🛏️",
+
+    -- travel / transport
+    car = "🚗", bus = "🚌", train = "🚆", airplane = "✈️",
+    rocket2 = "🚀", scooter = "🛴", skateboard = "🛹",
+
+    -- food expansion
+    ramen = "🍜", fries = "🍟", steak = "🥩", egg = "🥚",
+    milk = "🥛", popcorn = "🍿", donut = "🍩",
+
+    -- symbols / misc
+    infinity = "♾️", peace = "☮️", cross = "✝️",
+    star2 = "🌟", sparkle2 = "✨✨", fire2 = "🔥🔥",
+    warning2 = "⚠️⚠️", success2 = "✔️✔️",
 }
 
 local function resolveIconGlyph(icon)
