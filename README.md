@@ -1,13 +1,27 @@
-# NriculLib
-MY VERY OWN SCRIPT LIB!!!
+# ✨ NriculLib
 
+**Your Personal Script Library - Supercharged!**
 
-# Load With This:
+A powerful, customizable UI library for Roblox with an intuitive API and beautiful theming system.
+
+---
+
+## 🚀 Quick Start
+
+Load the library into your script:
+
 ```text
 local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib'))()
 ```
 
-Window
+---
+
+## 📦 Components
+
+### 🖼️ **Window**
+
+Create the main UI window with full customization:
+
 ```text
 local Window = Lib:CreateGui({
 
@@ -50,27 +64,42 @@ local Window = Lib:CreateGui({
 })
 ```
 
-Tabs
+### 📑 **Tabs**
+
+Organize your UI into manageable sections:
+
 ```text
 local Tab = Window:CreateTab("Tab", "star")
 ```
 
-Sections
+### 🏷️ **Sections**
+
+Group related elements together:
+
 ```text
 Tab:CreateSection("Section")
 ```
 
-Labels
+### 📝 **Labels**
+
+Display text labels with icons:
+
 ```text
 Tab:CreateLabel("Label", "star")
 ```
 
-Dividers
+### ➖ **Dividers**
+
+Separate content visually:
+
 ```text
 Tab:CreateDivider()
 ```
 
-Paragraphs
+### 💬 **Paragraphs**
+
+Show formatted text content:
+
 ```text
 Tab:CreateParagraph({
 
@@ -81,7 +110,10 @@ Tab:CreateParagraph({
 })
 ```
 
-Buttons
+### 🔘 **Buttons**
+
+Create interactive buttons:
+
 ```text
 Tab:CreateButton({
 
@@ -96,7 +128,10 @@ Tab:CreateButton({
 })
 ```
 
-Toggles
+### 🎚️ **Toggles**
+
+Add on/off switches:
+
 ```text
 Tab:CreateToggle({
 
@@ -113,7 +148,10 @@ Tab:CreateToggle({
 })
 ```
 
-Inputs
+### ⌨️ **Inputs**
+
+Get user text input:
+
 ```text
 Tab:CreateInput({
 
@@ -134,7 +172,10 @@ Tab:CreateInput({
 })
 ```
 
-Dropdowns
+### 🎯 **Dropdowns**
+
+Let users select from options:
+
 ```text
 Tab:CreateDropdown({
 
@@ -155,7 +196,10 @@ Tab:CreateDropdown({
 })
 ```
 
-Sliders
+### 📊 **Sliders**
+
+Capture numeric input with range control:
+
 ```text
 Tab:CreateSlider({
 
@@ -178,7 +222,10 @@ Tab:CreateSlider({
 })
 ```
 
-Colour Picker
+### 🎨 **Color Picker**
+
+Let users choose colors:
+
 ```text
 Tab:CreateColorPicker({
 
@@ -195,7 +242,10 @@ Tab:CreateColorPicker({
 })
 ```
 
-Keybinds
+### ⌨️ **Keybinds**
+
+Allow users to set custom keybindings:
+
 ```text
 Tab:CreateKeybind({
 
@@ -213,3 +263,7 @@ Tab:CreateKeybind({
 
 })
 ```
+
+---
+
+**Made with ❤️ by Actusis-Nricul**
