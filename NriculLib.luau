@@ -190,10 +190,12 @@ local IconGlyphs = {
     lantern = "🏮", balloon = "🎈", kite = "🪁", toy = "🪆",
     coffee = "☕", tea = "🍵", juice = "🧃", soda = "🥤", water = "💧",
     pizza = "🍕", burger = "🍔", sushi = "🍣", taco = "🌮", salad = "🥗",
-    cookie = "🍪", cake2 = "🍰", cakeslice = "🍰", cakepiece = "🍰", candy = "🍬", chocolate = "🍫", icecream = "🍦",
+    cookie = "🍪", cake2 = "🍰", cakeslice = "🍰", cakepiece = "🍰", candy = "🍬",
+    chocolate = "🍫", icecream = "🍦",
     cat = "🐱", dog = "🐶", fox = "🦊", wolf = "🐺", bear = "🐻",
     lion = "🦁", tiger = "🐯", snake = "🐍", eagle = "🦅", owl = "🦉",
-    penguin = "🐧", unicorn = "🦄", phoenix = "🦅", kraken = "🐙",
+    penguin = "🐧", unicorn = "🦄", phoenix = "🦅", kraken = "🐙", god = "😇",
+    heaven = "😇", godbaby = "👼", heavenbaby = "👼",
 
     -- tech / cyber
     cyber = "🧠", ai = "🤖", neural = "🧬", chip = "💠", circuit = "🔌",
