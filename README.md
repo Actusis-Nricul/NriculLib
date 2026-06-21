@@ -10,8 +10,8 @@ A powerful, customizable UI library for Roblox with an intuitive API and beautif
 
 Load the library into your script:
 
-```text
-local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib'))()
+```luau
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib.luau"))()
 ```
 
 ---
@@ -22,7 +22,7 @@ local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-N
 
 Create the main UI window with full customization:
 
-```text
+```luau
 local Window = Lib:CreateGui({
 
     Name = "NriculLibExample",
@@ -68,7 +68,7 @@ local Window = Lib:CreateGui({
 
 Organize your UI into manageable sections:
 
-```text
+```luau
 local Tab = Window:CreateTab("Tab", "star")
 ```
 
@@ -76,7 +76,7 @@ local Tab = Window:CreateTab("Tab", "star")
 
 Group related elements together:
 
-```text
+```luau
 Tab:CreateSection("Section")
 ```
 
@@ -84,7 +84,7 @@ Tab:CreateSection("Section")
 
 Display text labels with icons:
 
-```text
+```luau
 Tab:CreateLabel("Label", "star")
 ```
 
@@ -92,7 +92,7 @@ Tab:CreateLabel("Label", "star")
 
 Separate content visually:
 
-```text
+```luau
 Tab:CreateDivider()
 ```
 
@@ -100,7 +100,7 @@ Tab:CreateDivider()
 
 Show formatted text content:
 
-```text
+```luau
 Tab:CreateParagraph({
 
     Title = "Paragraph",
@@ -114,7 +114,7 @@ Tab:CreateParagraph({
 
 Create interactive buttons:
 
-```text
+```luau
 Tab:CreateButton({
 
     Name = "Button",
@@ -132,7 +132,7 @@ Tab:CreateButton({
 
 Add on/off switches:
 
-```text
+```luau
 Tab:CreateToggle({
 
     Name = "Toggle",
@@ -152,7 +152,7 @@ Tab:CreateToggle({
 
 Get user text input:
 
-```text
+```luau
 Tab:CreateInput({
 
     Name = "Input",
@@ -176,7 +176,7 @@ Tab:CreateInput({
 
 Let users select from options:
 
-```text
+```luau
 Tab:CreateDropdown({
 
     Name = "Dropdown",
@@ -200,7 +200,7 @@ Tab:CreateDropdown({
 
 Capture numeric input with range control:
 
-```text
+```luau
 Tab:CreateSlider({
 
     Name = "Slider",
@@ -226,7 +226,7 @@ Tab:CreateSlider({
 
 Let users choose colors:
 
-```text
+```luau
 Tab:CreateColorPicker({
 
     Name = "Color Picker",
@@ -246,7 +246,7 @@ Tab:CreateColorPicker({
 
 Allow users to set custom keybindings:
 
-```text
+```luau
 Tab:CreateKeybind({
 
     Name = "Keybind",
