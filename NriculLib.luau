@@ -47,6 +47,7 @@ local IconGlyphs = {
     angel = "👼", fairy = "🧚", mage = "🧙", vampire = "🧛", zombie = "🧟",
     robot = "🤖", alien = "👽", clown = "🤡", ghost = "👻",
     smile = "😀", smile2 = "😃", smile3 = "😄", lilbrosonion = "🤲",
+    hands = "🤲", openhands = "🤲",
 
     -- actions / media
     play = "▶", pause = "❚❚", stop = "■", skipback = "⏮", skipforward = "⏭",
