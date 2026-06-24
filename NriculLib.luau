@@ -4,11 +4,6 @@
 
     Load with:
     local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib.luau'))()
-
-    Icons use the real Lucide Icon Set via latte-soft/lucide-roblox:
-    https://github.com/latte-soft/lucide-roblox
-    Pass any valid Lucide icon name (e.g. "home", "settings", "trash-2") as the icon
-    argument anywhere an icon is accepted. Falls back to blank if unmapped/unavailable.
 ]]
 
 local NriculLib = {}
@@ -27,7 +22,7 @@ local HttpService        = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 
 -- =====================
--- LUCIDE ICONS (real vector icons via latte-soft/lucide-roblox)
+-- LUCIDE ICONS
 -- =====================
 local Lucide = nil
 do
