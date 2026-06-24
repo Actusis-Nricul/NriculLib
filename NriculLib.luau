@@ -4,6 +4,11 @@
 
     Load with:
     local Lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/Actusis-Nricul/NriculLib/refs/heads/main/NriculLib.luau'))()
+
+    Icons use the real Lucide Icon Set via latte-soft/lucide-roblox:
+    https://github.com/latte-soft/lucide-roblox
+    Pass any valid Lucide icon name (e.g. "home", "settings", "trash-2") as the icon
+    argument anywhere an icon is accepted. Falls back to blank if unmapped/unavailable.
 ]]
 
 local NriculLib = {}
@@ -22,232 +27,69 @@ local HttpService        = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 
 -- =====================
--- ICON FALLBACK (Lucide-name -> glyph)
--- 130+ icons btw subscribe to Actusis rn this took forever
+-- LUCIDE ICONS (real vector icons via latte-soft/lucide-roblox)
 -- =====================
-local IconGlyphs = {
-    -- navigation / general
-    home = "🏡", settings = "⚙️", gear = "⚙️", menu = "☰", grid = "▦",
-    list = "☰", layout = "▣", sidebar = "▤", compass = "🧭", map = "🗺️",
-    mappin = "📍", navigation = "🧭", globe = "🌐", world = "🌍",
-    route = "🛣️", road = "🛤️", bridge = "🌉", tunnel = "🚇", highway = "🛣️",
-    sign = "🪧", signpost = "🪧", direction = "🧭", pin = "📌", location = "📍",
-    landmark = "🏛️", building = "🏢", house = "🏠", office = "🏢", school = "🏫",
-    hospital = "🏥", store = "🏪", warehouse = "🏭", castle = "🏰", tower = "🗼",
-
-    -- people
-    user = "🙂", users = "🙂🙂", usercheck = "✓🙂", userplus = "+🙂",
-    userminus = "-🙂", userx = "✕🙂", person = "😀", personstanding = "🚶",
-    crown = "♛", baby = "👶", lifter = "🏋️", workout = "🏋️", weight = "🏋️",
-    weightlift = "🏋️", weightlifter = "🏋️", speed = "🏃", run = "🏃",
-    running = "🏃", sped = "🏃", dancer = "💃", swimmer = "🏊", cyclist = "🚴",
-    climber = "🧗", skier = "⛷️", surfer = "🏄", archer = "🏹", ninja = "🥷",
-    detective = "🕵️", guard = "💂", pilot = "🧑‍✈️", astronaut = "👨‍🚀",
-    scientist = "🧑‍🔬", teacher = "🧑‍🏫", chef = "🧑‍🍳", farmer = "🧑‍🌾",
-    angel = "👼", fairy = "🧚", mage = "🧙", vampire = "🧛", zombie = "🧟",
-    robot = "🤖", alien = "👽", clown = "🤡", ghost = "👻",
-    smile = "😀", smile2 = "😃", smile3 = "😄", lilbrosonion = "🤲",
-    hands = "🤲", openhands = "🤲", wing = "🪽", wings = "🪽",
-    fly = "🪽", flying = "🪽",
-
-    -- actions / media
-    play = "▶", pause = "❚❚", stop = "■", skipback = "⏮", skipforward = "⏭",
-    rewind = "◀◀", fastforward = "▶▶", repeat1 = "🔁", shuffle = "🔀",
-    volume = "🔊", volume1 = "🔉", volume2 = "🔊", volumex = "🔇",
-    mic = "🎙️", micoff = "🚫🎙️", camera = "📷", video = "🎥", videooff = "🚫🎥",
-    music = "🎵", headphones = "🎧", radio = "📻", tv = "📺", film = "🎬",
-    clapper = "🎬", ticket = "🎫", record = "⏺️", broadcast = "📡",
-    stream = "📡", cast = "📡", cinema = "🎦", concert = "🎤", stage = "🎭",
-    album = "💿", vinyl = "📀", tape = "📼", note = "🎵", notes = "🎶",
-    piano = "🎹", guitar = "🎸", drums = "🥁", trumpet = "🎺", violin = "🎻",
-
-    -- ui/system
-    trash = "🗑️", trash2 = "🗑️", search = "🔍", filter = "▼",
-    refresh = "↻", refreshcw = "↻", refreshccw = "↺", rotate = "↻",
-    rotatecw = "↻", rotateccw = "↺", loader = "◐", loader2 = "◑",
-    download = "⬇️", upload = "⬆️", save = "💾", share = "↗", share2 = "↗",
-    link = "🔗", link2 = "🔗", unlink = "🔗✕", externallink = "↗",
-    copy = "⧉", clipboard = "📋", clipboardcheck = "✓📋",
-    edit = "✏️", edit2 = "✏️", edit3 = "✏️", pencil = "✏️", pen = "🖊️",
-    pentool = "🖊️", cursor = "🖱️", click = "👆", tap = "👆", drag = "✋",
-    swipe = "👋", pinch = "🤏", zoom = "🔍", zoomin = "🔍", zoomout = "🔎",
-    terminal = "⬛", code = "💻", bug = "🐛", debug = "🐞", compile = "⚙️",
-    deploy = "🚀", build = "🔨", test = "🧪", merge = "🔀", branch = "🌿",
-
-    -- status / feedback
-    check = "✓", checkcircle = "✅", checksquare = "✓", checkcheck = "✓✓",
-    x = "✕", xcircle = "⊗", xsquare = "⊠",
-    plus = "+", pluscircle = "⊕", plussquare = "⊞",
-    minus = "-", minuscircle = "⊖", minussquare = "⊟",
-    info = "ℹ️", help = "❓", helpcircle = "❓", question = "❓",
-    warning = "⚠️", alerttriangle = "⚠️", alert = "⚠️", alertoctagon = "⛔",
-    ban = "⛔", octagonalert = "⛔", error = "❌", success = "✅",
-    pending = "⏳", loading = "⏳", processing = "⚙️", done = "✅",
-    failed = "❌", blocked = "🚫", allowed = "✅", denied = "⛔",
-    new = "🆕", free = "🆓", cool = "🆒", up = "🆙", ok = "🆗", sos = "🆘",
-
-    -- arrows
-    arrowup = "↑", arrowdown = "↓", arrowleft = "←", arrowright = "→",
-    arrowupright = "↗", arrowupleft = "↖", arrowdownright = "↘", arrowdownleft = "↙",
-    chevronup = "︿", chevrondown = "﹀", chevronleft = "‹", chevronright = "›",
-    chevronsup = "⇈", chevronsdown = "⇊", chevronsleft = "⇇", chevronsright = "⇉",
-    movevertical = "↕", movehorizontal = "↔", move = "✛",
-    cornerupright = "↱", cornerupleft = "↰", cornerdownright = "↳", cornerdownleft = "↲",
-    circlearrow = "🔄", looparrow = "🔁", backarrow = "↩️", forwardarrow = "↪️",
-    returnarrow = "↩️", enterkey = "⏎", swaphoriz = "⇄", swapvert = "⇅",
-    rebirth = "🔄", loop = "🔄", redo = "🔄",
-
-    -- time
-    clock = "🕐", clock1 = "🕐", calendar = "📅", calendardays = "📅",
-    timer = "⏱️", hourglass = "⏳", history = "🕓", alarmclock = "⏰",
-    stopwatch = "⏱️", countdown = "⏳", schedule = "📆", deadline = "⏰",
-    sunrise = "🌅", sunset = "🌇", midnight = "🌑", noon = "🌞",
-    morning = "🌄", evening = "🌆", night = "🌃", weekly = "🗓️",
-    monthly = "📅", yearly = "🗓️", daily = "📆",
-
-    -- security
-    lock = "🔒", unlock = "🔓", key = "🔑", keyround = "🔑",
-    shield = "🛡️", shieldcheck = "🛡✓", shieldalert = "🛡⚠", shieldoff = "🛡✕",
-    fingerprint = "👆", eye = "👁️", eyeoff = "🚫👁️", scan = "▢",
-    password = "🔐", encrypted = "🔒", decrypted = "🔓", verified = "✅",
-    token = "🔑", certificate = "📜", badge = "🏷️", id = "🪪",
-    passport = "📘", biometric = "👁️", facelock = "😶", private = "🔒",
-    public = "🌐", hidden = "🙈", visible = "👁️", masked = "🎭",
-
-    -- files
-    folder = "📁", folderopen = "📂", folderplus = "📁+", folders = "📁📁",
-    file = "📄", filetext = "📄", filecode = "💾", fileplus = "📄+",
-    archive = "🗃️", box = "📦", package = "📦",
-    inbox = "📥", database = "🗄️", server = "🖥️", harddrive = "💽",
-    ssd = "💾", usb = "💿", sd = "💾", disk = "💿", floppy = "💾",
-    zip = "🗜️", pdf = "📋", doc = "📝", sheet = "📊", slide = "📊",
-    image = "🖼️", photo = "📸", video2 = "🎞️", audio = "🎵",
-
-    -- communication
-    mail = "✉️", mailopen = "📭", send = "➤", messagecircle = "💬",
-    messagesquare = "💬", phone = "📞", phonecall = "📞", bell = "🔔",
-    belloff = "🔕", bellring = "🔔", rss = "📡", wifi = "📶", wifioff = "📵",
-    bluetooth = "🔵", chat = "💬", message = "✉️", email = "📧",
-    inbox2 = "📨", outbox = "📤", reply = "↩️", replyall = "↩️↩️",
-    forward = "↪️", mention = "@", hashtag = "#", tag = "🏷️",
-    notification = "🔔", announcement = "📢", broadcast2 = "📣",
-    megaphone = "📣", sms = "💬", voicemail = "📳",
-
-    -- weather / nature
-    sun = "☀️", moon = "🌙", cloud = "☁️", cloudrain = "🌧️", cloudsnow = "🌨️",
-    cloudlightning = "🌩️", wind = "🌬️", snowflake = "❄️", droplet = "💧",
-    droplets = "💧", flame = "🔥", thermometer = "🌡️", umbrella = "☂️",
-    leaf = "🍃", tree = "🌳", flower = "🌸", sprout = "🌱",
-    rainbow = "🌈", tornado = "🌪️", fog = "🌫️", hail = "🌨️",
-    thunder = "⛈️", partly = "⛅", hot = "🥵", cold = "🥶",
-    volcano = "🌋", earthquake = "🌍", flood = "🌊", drought = "☀️",
-    forest = "🌲", jungle = "🌴", desert = "🏜️", ocean = "🌊",
-    mountain = "⛰️", island = "🏝️", cave = "⛰️", glacier = "🧊",
-
-    -- objects
-    star = "⭐", heart = "❤️", heartoff = "🚫❤️", bookmark = "🔖",
-    flag = "🏳️", flagoff = "🏴", award = "🏅", trophy = "🏆", medal = "🎖️",
-    gift = "🎁", target = "🎯", crosshair = "✛", anchor = "⚓",
-    zap = "⚡", bolt = "⚡", lightning = "⚡", lightningbolt = "⚡",
-    zapoff = "⚡✕", battery = "🔋", batterylow = "🪫",
-    plug = "🔌", power = "⏻", powermin = "⏻",
-    gem = "💎", diamond = "💎", crystal = "🔮", orb = "🔮", potion = "🧪",
-    scroll = "📜", book = "📚", spellbook = "📖", map2 = "🗺️",
-    compass2 = "🧭", binoculars = "🔭", telescope = "🔭", microscope = "🔬",
-    magnet = "🧲", spring = "🌀", cog = "⚙️", chain = "⛓️",
-
-    -- gaming / fantasy
-    sword = "⚔️", swords = "⚔️", skull = "💀", skullcross = "☠️",
-    gamepad = "🎮", gamepad2 = "🎮",
-    dice = "🎲", puzzle = "🧩", puzzlepiece = "🧩", joystick = "🕹️",
-    rocket = "🚀", ghost = "👻", bot = "🤖",
-    shield2 = "🛡️", bow = "🏹", axe = "🪓", dagger = "🗡️", staff = "🪄",
-    wand = "🪄", bomb = "💣", explosion = "💥", fireball = "🔥",
-    icespell = "❄️", lightning2 = "⚡", portal = "🌀", dungeon = "🏰",
-    dragon = "🐉", knight = "⚔️", wizard = "🧙", warrior = "🪖", rogue = "🗡️",
-    healer = "💊", tank = "🛡️", boss = "👹", monster = "👾", loot = "💰",
-    xp = "⭐", level = "📈", quest = "📜", respawn = "🔄", spawn = "🌀",
-    divine = "🔱", trident = "🔱", tridenthead = "🔱", atlantis = "🔱",
-
-    -- finance
-    dollarsign = "$", creditcard = "💳", wallet = "👛", coins = "🪙",
-    banknote = "💵", piggybank = "🐖", receipt = "🧾", percent = "%",
-    euro = "💶", pound = "💷", yen = "💴", bitcoin = "₿", crypto = "₿",
-    stock = "📈", chart = "📊", graph = "📉", invest = "💹", profit = "💰",
-    loss = "📉", budget = "💰", tax = "🧾", payment = "💳", transfer = "↔️",
-    deposit = "📥", withdraw = "📤", interest = "%", loan = "🏦", bank = "🏦",
-
-    -- misc
-    sparkles = "✨", sparkle = "✨", flameicon = "🔥", fire = "🔥",
-    lightbulb = "💡", idea = "💡",
-    palette = "🎨", paintbrush = "🖌️", scissors = "✂️", ruler = "📏",
-    wrench = "🔧", hammer = "🔨", tool = "🛠️", settings2 = "⚙️",
-    sliders = "🎛️", toggleoff = "◯", toggleon = "⬤",
-    layers = "▤", maximize = "⛶", minimize2 = "⛶", expand = "⤢", shrink = "⤡",
-    monitor = "🖥️", smartphone = "📱", tablet = "📱", laptop = "💻",
-    printer = "🖨️", keyboard2 = "⌨️", mouse = "🖱️",
-    galaxy = "🌌", xray = "🩻", dna = "🧬", atom = "⚛️",
-    jump = "🦘", kangaroo = "🦘", hop = "🦘", lift = "🛗", elevator = "🛗",
-    party = "🎉", confetti = "🎊", celebrate = "🎉", cake = "🎂", candle = "🕯️",
-    lantern = "🏮", balloon = "🎈", kite = "🪁", toy = "🪆",
-    coffee = "☕", tea = "🍵", juice = "🧃", soda = "🥤", water = "💧",
-    pizza = "🍕", burger = "🍔", sushi = "🍣", taco = "🌮", salad = "🥗",
-    cookie = "🍪", cake2 = "🍰", cakeslice = "🍰", cakepiece = "🍰", candy = "🍬",
-    chocolate = "🍫", icecream = "🍦",
-    cat = "🐱", dog = "🐶", fox = "🦊", wolf = "🐺", bear = "🐻",
-    lion = "🦁", tiger = "🐯", snake = "🐍", eagle = "🦅", owl = "🦉",
-    penguin = "🐧", unicorn = "🦄", phoenix = "🦅", kraken = "🐙", god = "😇",
-    heaven = "😇", godbaby = "👼", heavenbaby = "👼",
-
-    -- tech / cyber
-    cyber = "🧠", ai = "🤖", neural = "🧬", chip = "💠", circuit = "🔌",
-    serverrack = "🗄️", cloud = "☁️", cloudsync = "☁️🔄", firewall = "🧱",
-    vpn = "🔐", api = "🔗", sdk = "🧩", database2 = "🗃️",
-
-    -- UI / dev
-    code2 = "🧑‍💻", terminal2 = "💻", console = "🖥️", inspect = "🔍",
-    inspect2 = "🕵️", commit = "📌", push = "🚀", pull = "⬇️",
-    branch2 = "🌿", merge2 = "🔀", fork = "🍴",
-
-    -- emotions / reactions
-    love = "😍", hype = "🤩", sad = "😢", cry = "😭", laugh = "😂",
-    confused = "😵", angry = "😡", dead = "💀", shocked = "😱",
-    chill = "😎", sleepy = "😴",
-
-    -- animals expansion
-    raccoon = "🦝", deer = "🦌", goat = "🐐", horse = "🐴", cow = "🐮",
-    duck = "🦆", fish = "🐟", shark = "🦈", whale = "🐋", octopus = "🐙",
-
-    -- fantasy expansion
-    fairy2 = "🧚‍♂️", genie = "🧞", mermaid = "🧜", troll = "🧌",
-    alien2 = "👾", demon = "👹", angel2 = "😇",
-
-    -- objects expansion
-    key2 = "🗝️", lock2 = "🔐", hammer2 = "🔨", axe2 = "🪓",
-    ring = "💍", necklace = "📿", watch = "⌚", glasses = "👓",
-    chair = "🪑", bed = "🛏️",
-
-    -- travel / transport
-    car = "🚗", bus = "🚌", train = "🚆", airplane = "✈️",
-    rocket2 = "🚀", scooter = "🛴", skateboard = "🛹",
-
-    -- food expansion
-    ramen = "🍜", fries = "🍟", steak = "🥩", egg = "🥚",
-    milk = "🥛", popcorn = "🍿", donut = "🍩",
-
-    -- symbols / misc
-    infinity = "♾️", peace = "☮️", cross = "✝️",
-    star2 = "🌟", sparkle2 = "✨✨", fire2 = "🔥🔥",
-    warning2 = "⚠️⚠️", success2 = "✔️✔️",
-}
-
-local function resolveIconGlyph(icon)
-    if not icon or icon == "" then return "" end
-    if typeof(icon) == "string" then
-        local glyph = IconGlyphs[icon:lower():gsub("[%-%s_]", "")]
-        return glyph or ""
+local Lucide = nil
+do
+    local ok, result = pcall(function()
+        return loadstring(game:HttpGet(
+            "https://github.com/latte-soft/lucide-roblox/releases/latest/download/lucide-roblox.luau"
+        ))()
+    end)
+    if ok and result then
+        Lucide = result
+    else
+        warn("NriculLib | Failed to load Lucide icon library — icons will not render. " .. tostring(result))
     end
-    return ""
+end
+
+local function isLucideIcon(icon)
+    if not Lucide or typeof(icon) ~= "string" then return false end
+    local names = Lucide.IconNames
+    if not names then return false end
+    return table.find(names, icon:lower()) ~= nil
+end
+
+-- configures an existing ImageLabel with the resolved icon.
+-- accepts: Lucide icon name (string), raw rbxassetid number, or "rbxassetid://...""/"rbxasset://..."/"http..." string
+-- returns true if something was applied, false if blank
+local function applyIcon(imgLabel, icon, size)
+    if not icon or icon == "" then
+        imgLabel.Visible = false
+        return false
+    end
+
+    if typeof(icon) == "string" and (icon:match("^rbxassetid://") or icon:match("^rbxasset://") or icon:match("^http")) then
+        imgLabel.Image = icon
+        imgLabel.ImageRectOffset = Vector2.zero
+        imgLabel.ImageRectSize = Vector2.zero
+        imgLabel.Visible = true
+        return true
+    end
+
+    if typeof(icon) == "number" then
+        imgLabel.Image = "rbxassetid://" .. tostring(icon)
+        imgLabel.ImageRectOffset = Vector2.zero
+        imgLabel.ImageRectSize = Vector2.zero
+        imgLabel.Visible = true
+        return true
+    end
+
+    if isLucideIcon(icon) then
+        local ok, asset = pcall(function()
+            return Lucide.GetAsset(icon:lower(), size or 48)
+        end)
+        if ok and asset then
+            imgLabel.Image = asset.Url
+            imgLabel.ImageRectOffset = asset.ImageRectOffset
+            imgLabel.ImageRectSize = asset.ImageRectSize
+            imgLabel.Visible = true
+            return true
+        end
+    end
+
+    imgLabel.Visible = false
+    return false
 end
 
 -- =====================
@@ -389,7 +231,6 @@ NriculLib.Theme = {
         ToggleOn = Color3.fromRGB(0, 200, 255), ToggleOff = Color3.fromRGB(40, 60, 80),
         InputBackground = Color3.fromRGB(10, 16, 24),
     },
-
     Ember = {
         Background = Color3.fromRGB(18, 10, 10), Topbar = Color3.fromRGB(28, 14, 14),
         Accent = Color3.fromRGB(255, 90, 60), TextColor = Color3.fromRGB(255, 230, 225),
@@ -399,7 +240,6 @@ NriculLib.Theme = {
         ToggleOn = Color3.fromRGB(255, 120, 80), ToggleOff = Color3.fromRGB(80, 50, 50),
         InputBackground = Color3.fromRGB(24, 12, 12),
     },
-
     AquaMint = {
         Background = Color3.fromRGB(10, 20, 22), Topbar = Color3.fromRGB(14, 26, 28),
         Accent = Color3.fromRGB(80, 230, 200), TextColor = Color3.fromRGB(225, 255, 250),
@@ -409,7 +249,6 @@ NriculLib.Theme = {
         ToggleOn = Color3.fromRGB(80, 230, 200), ToggleOff = Color3.fromRGB(45, 70, 68),
         InputBackground = Color3.fromRGB(12, 24, 26),
     },
-
     RoseGold = {
         Background = Color3.fromRGB(24, 18, 20), Topbar = Color3.fromRGB(32, 24, 26),
         Accent = Color3.fromRGB(225, 170, 150), TextColor = Color3.fromRGB(255, 240, 235),
@@ -419,7 +258,6 @@ NriculLib.Theme = {
         ToggleOn = Color3.fromRGB(240, 190, 170), ToggleOff = Color3.fromRGB(80, 65, 65),
         InputBackground = Color3.fromRGB(28, 22, 24),
     },
-
     Thunder = {
         Background = Color3.fromRGB(12, 12, 18), Topbar = Color3.fromRGB(18, 18, 26),
         Accent = Color3.fromRGB(255, 230, 90), TextColor = Color3.fromRGB(240, 240, 220),
@@ -489,7 +327,7 @@ local function ensureFolder(path)
 end
 
 -- =====================
--- DISCORD JOIN
+-- DISCORD JOIN (matches Rayfield's exact behaviour)
 -- =====================
 local NriculLibFolder = "NriculLib"
 local ConfigurationExtension = ".nlib"
@@ -505,7 +343,6 @@ local function handleDiscordPrompt(discordSettings)
 
     local inviteFile = NriculLibFolder .. "/Discord Invites/" .. discordSettings.Invite .. ConfigurationExtension
 
-    -- only prompt if no marker file exists yet
     if not (hasFS and pcall(isfile, inviteFile) and isfile(inviteFile)) then
         if requestFunc then
             pcall(function()
@@ -525,7 +362,6 @@ local function handleDiscordPrompt(discordSettings)
             end)
         end
 
-        -- write marker so they never get prompted again
         if discordSettings.RememberJoins then
             if hasFS then
                 pcall(function()
@@ -546,7 +382,7 @@ function NriculLib:CreateGui(settings)
     settings = settings or {}
 
     -- =====================
-    -- KEY SYSTEM
+    -- KEY SYSTEM (local-only, no HTTP)
     -- =====================
     if settings.KeySystem then
         local ks = settings.KeySettings or {}
@@ -560,7 +396,6 @@ function NriculLib:CreateGui(settings)
 
         local passthrough = false
 
-        -- check saved key first
         if hasFS and ks.SaveKey then
             local ok, saved = pcall(readfile, keyFile)
             if ok and saved then
@@ -574,7 +409,6 @@ function NriculLib:CreateGui(settings)
         end
 
         if not passthrough then
-            -- build a blocking key entry UI
             local keyGui = create("ScreenGui", {
                 Name = "NriculLib_KeyCheck",
                 ResetOnSpawn = false,
@@ -766,11 +600,26 @@ function NriculLib:CreateGui(settings)
         Parent = topbar,
     })
 
+    -- topbar icon: real Lucide icon if settings.Icon given, else first-letter fallback
+    local topbarIconImg = create("ImageLabel", {
+        Size = UDim2.new(0, 18, 0, 18),
+        Position = UDim2.new(0, 13, 0.5, -9),
+        BackgroundTransparency = 1,
+        Visible = false,
+        ZIndex = 7,
+        Parent = topbar,
+    })
+    local hasTopbarIcon = false
+    if settings.Icon then
+        hasTopbarIcon = applyIcon(topbarIconImg, settings.Icon, 48)
+    end
+
     local iconCircle = create("Frame", {
         Size = UDim2.new(0, 26, 0, 26),
         Position = UDim2.new(0, 10, 0.5, -13),
         BackgroundColor3 = SelectedTheme.Accent,
         BorderSizePixel = 0,
+        Visible = not hasTopbarIcon,
         ZIndex = 6,
         Parent = topbar,
     })
@@ -908,7 +757,7 @@ function NriculLib:CreateGui(settings)
     local firstTabSet = false
 
     -- =====================
-    -- NOTIFICATIONS (fixed: actually works, stacks, auto-clears)
+    -- NOTIFICATIONS
     -- =====================
     local notifContainer = create("Frame", {
         Size = UDim2.new(0, 300, 1, -20),
@@ -977,7 +826,6 @@ function NriculLib:CreateGui(settings)
             Parent = notif,
         })
 
-        -- fade in
         tween(notif, TweenInfo.new(0.3), {BackgroundTransparency = 0})
         tween(s, TweenInfo.new(0.3), {Transparency = 0})
         tween(accent, TweenInfo.new(0.3), {BackgroundTransparency = 0})
@@ -997,7 +845,6 @@ function NriculLib:CreateGui(settings)
         end)
     end
 
--- discord prompt (after Window is set up, no Notifys needed)
     if settings.Discord then
         task.spawn(function()
             handleDiscordPrompt(settings.Discord)
@@ -1005,7 +852,7 @@ function NriculLib:CreateGui(settings)
     end
 
     -- =====================
-    -- CreateTab (now supports Lucide-style icon name)
+    -- CreateTab (real Lucide icon support)
     -- =====================
     function Window:CreateTab(name, icon)
         local Tab = {}
@@ -1020,21 +867,15 @@ function NriculLib:CreateGui(settings)
         })
         round(tabBtn, 8)
 
-        local iconGlyph = resolveIconGlyph(icon)
-        local labelOffset = iconGlyph ~= "" and 30 or 12
-
-        if iconGlyph ~= "" then
-            create("TextLabel", {
-                Size = UDim2.new(0, 18, 1, 0),
-                Position = UDim2.new(0, 8, 0, 0),
-                BackgroundTransparency = 1,
-                Text = iconGlyph,
-                TextColor3 = SelectedTheme.SubTextColor,
-                Font = Enum.Font.GothamBold,
-                TextSize = 13,
-                Parent = tabBtn,
-            })
-        end
+        local tabIconImg = create("ImageLabel", {
+            Size = UDim2.new(0, 16, 0, 16),
+            Position = UDim2.new(0, 9, 0.5, -8),
+            BackgroundTransparency = 1,
+            Visible = false,
+            Parent = tabBtn,
+        })
+        local hasIcon = applyIcon(tabIconImg, icon, 48)
+        local labelOffset = hasIcon and 30 or 12
 
         local tabLabel = create("TextLabel", {
             Size = UDim2.new(1, -labelOffset - 4, 1, 0),
@@ -1048,7 +889,7 @@ function NriculLib:CreateGui(settings)
             Parent = tabBtn,
         })
 
-local tabPage = create("ScrollingFrame", {
+        local tabPage = create("ScrollingFrame", {
             Size = UDim2.new(1, 0, 1, 0),
             BackgroundTransparency = 1,
             ScrollBarThickness = 3,
@@ -1068,6 +909,7 @@ local tabPage = create("ScrollingFrame", {
             orderCounter = orderCounter + 1
             return orderCounter
         end
+
         create("UIPadding", {
             PaddingTop = UDim.new(0, 10), PaddingLeft = UDim.new(0, 10),
             PaddingRight = UDim.new(0, 14), PaddingBottom = UDim.new(0, 10),
@@ -1103,7 +945,9 @@ local tabPage = create("ScrollingFrame", {
             selectTab()
         end
 
+        -- =====================
         -- CreateSection
+        -- =====================
         function Tab:CreateSection(sectionName)
             local sec = create("Frame", {Size = UDim2.new(1, 0, 0, 22), BackgroundTransparency = 1, LayoutOrder = nextOrder(), Parent = tabPage})
             local lbl = create("TextLabel", {
@@ -1117,7 +961,9 @@ local tabPage = create("ScrollingFrame", {
             return SectionValue
         end
 
+        -- =====================
         -- CreateDivider
+        -- =====================
         function Tab:CreateDivider()
             local div = create("Frame", {
                 Size = UDim2.new(1, 0, 0, 1),
@@ -1131,13 +977,14 @@ local tabPage = create("ScrollingFrame", {
             return DividerValue
         end
 
-        -- CreateLabel
+        -- =====================
+        -- CreateLabel (real Lucide icon)
+        -- =====================
         function Tab:CreateLabel(text, icon2, color)
-            local glyph = resolveIconGlyph(icon2)
             local lbl = create("TextLabel", {
                 Size = UDim2.new(1, 0, 0, 28),
                 BackgroundColor3 = SelectedTheme.ElementBackground,
-                Text = (glyph ~= "" and (glyph .. "  ") or "  ") .. text,
+                Text = "",
                 TextColor3 = color or SelectedTheme.TextColor,
                 Font = Enum.Font.Gotham,
                 TextSize = 11,
@@ -1147,16 +994,44 @@ local tabPage = create("ScrollingFrame", {
                 Parent = tabPage,
             })
             round(lbl, 6)
+
+            local iconImg = create("ImageLabel", {
+                Size = UDim2.new(0, 14, 0, 14),
+                Position = UDim2.new(0, 8, 0.5, -7),
+                BackgroundTransparency = 1,
+                Visible = false,
+                Parent = lbl,
+            })
+            local hasIco = applyIcon(iconImg, icon2, 48)
+
+            local textLbl = create("TextLabel", {
+                Size = hasIco and UDim2.new(1, -28, 1, 0) or UDim2.new(1, -16, 1, 0),
+                Position = hasIco and UDim2.new(0, 26, 0, 0) or UDim2.new(0, 8, 0, 0),
+                BackgroundTransparency = 1,
+                Text = text,
+                TextColor3 = color or SelectedTheme.TextColor,
+                Font = Enum.Font.Gotham,
+                TextSize = 11,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Parent = lbl,
+            })
+
             local LabelValue = {}
             function LabelValue:Set(newText, newIcon, newColor)
-                local g = resolveIconGlyph(newIcon)
-                lbl.Text = (g ~= "" and (g .. "  ") or "  ") .. newText
-                if newColor then lbl.TextColor3 = newColor end
+                textLbl.Text = newText
+                if newColor then textLbl.TextColor3 = newColor end
+                if newIcon then
+                    local has = applyIcon(iconImg, newIcon, 48)
+                    textLbl.Size = has and UDim2.new(1, -28, 1, 0) or UDim2.new(1, -16, 1, 0)
+                    textLbl.Position = has and UDim2.new(0, 26, 0, 0) or UDim2.new(0, 8, 0, 0)
+                end
             end
             return LabelValue
         end
 
+        -- =====================
         -- CreateParagraph
+        -- =====================
         function Tab:CreateParagraph(opts)
             opts = opts or {}
             local frame = create("Frame", {
@@ -1192,17 +1067,15 @@ local tabPage = create("ScrollingFrame", {
             return ParagraphValue
         end
 
-        -- CreateButton (icon supported)
+        -- =====================
+        -- CreateButton (real Lucide icon)
+        -- =====================
         function Tab:CreateButton(opts)
             opts = opts or {}
-            local glyph = resolveIconGlyph(opts.Icon)
             local btn = create("TextButton", {
                 Size = UDim2.new(1, 0, 0, 36),
                 BackgroundColor3 = SelectedTheme.ElementBackground,
-                Text = (glyph ~= "" and (glyph .. "  ") or "") .. (opts.Name or "Button"),
-                TextColor3 = SelectedTheme.TextColor,
-                Font = Enum.Font.Gotham,
-                TextSize = 12,
+                Text = "",
                 AutoButtonColor = false,
                 BorderSizePixel = 0,
                 LayoutOrder = nextOrder(),
@@ -1211,27 +1084,50 @@ local tabPage = create("ScrollingFrame", {
             round(btn, 8)
             stroke(btn, SelectedTheme.ElementStroke)
 
+            local iconImg = create("ImageLabel", {
+                Size = UDim2.new(0, 16, 0, 16),
+                Position = UDim2.new(0, 10, 0.5, -8),
+                BackgroundTransparency = 1,
+                Visible = false,
+                Parent = btn,
+            })
+            local hasIco = applyIcon(iconImg, opts.Icon, 48)
+
+            local label = create("TextLabel", {
+                Size = hasIco and UDim2.new(1, -36, 1, 0) or UDim2.new(1, -16, 1, 0),
+                Position = hasIco and UDim2.new(0, 32, 0, 0) or UDim2.new(0, 8, 0, 0),
+                BackgroundTransparency = 1,
+                Text = opts.Name or "Button",
+                TextColor3 = SelectedTheme.TextColor,
+                Font = Enum.Font.Gotham,
+                TextSize = 12,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                Parent = btn,
+            })
+
             btn.MouseEnter:Connect(function() tween(btn, TweenInfo.new(0.15), {BackgroundColor3 = SelectedTheme.ElementHover}) end)
             btn.MouseLeave:Connect(function() tween(btn, TweenInfo.new(0.15), {BackgroundColor3 = SelectedTheme.ElementBackground}) end)
 
             btn.MouseButton1Click:Connect(function()
                 local ok, err = safeCall(opts.Callback)
                 if not ok then
-                    local origText = btn.Text
-                    btn.Text = "Callback Error"
+                    local orig = label.Text
+                    label.Text = "Callback Error"
                     tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)})
                     task.wait(0.6)
-                    btn.Text = origText
+                    label.Text = orig
                     tween(btn, TweenInfo.new(0.2), {BackgroundColor3 = SelectedTheme.ElementBackground})
                 end
             end)
 
             local ButtonValue = {}
-            function ButtonValue:Set(newName) btn.Text = newName end
+            function ButtonValue:Set(newName) label.Text = newName end
             return ButtonValue
         end
 
+        -- =====================
         -- CreateToggle
+        -- =====================
         function Tab:CreateToggle(opts)
             opts = opts or {}
             local state = opts.CurrentValue or false
@@ -1239,8 +1135,18 @@ local tabPage = create("ScrollingFrame", {
             local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, LayoutOrder = nextOrder(), Parent = tabPage})
             round(frame, 8); stroke(frame, SelectedTheme.ElementStroke)
 
+            local iconImg = create("ImageLabel", {
+                Size = UDim2.new(0, 16, 0, 16),
+                Position = UDim2.new(0, 10, 0.5, -8),
+                BackgroundTransparency = 1,
+                Visible = false,
+                Parent = frame,
+            })
+            local hasIco = applyIcon(iconImg, opts.Icon, 48)
+
             create("TextLabel", {
-                Size = UDim2.new(1, -60, 1, 0), Position = UDim2.new(0, 12, 0, 0),
+                Size = hasIco and UDim2.new(1, -84, 1, 0) or UDim2.new(1, -60, 1, 0),
+                Position = hasIco and UDim2.new(0, 32, 0, 0) or UDim2.new(0, 12, 0, 0),
                 BackgroundTransparency = 1, Text = opts.Name or "Toggle",
                 TextColor3 = SelectedTheme.TextColor, Font = Enum.Font.Gotham,
                 TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, Parent = frame,
@@ -1284,7 +1190,9 @@ local tabPage = create("ScrollingFrame", {
             return ToggleValue
         end
 
+        -- =====================
         -- CreateSlider
+        -- =====================
         function Tab:CreateSlider(opts)
             opts = opts or {}
             local range = opts.Range or {0, 100}
@@ -1360,7 +1268,9 @@ local tabPage = create("ScrollingFrame", {
             return SliderValue
         end
 
+        -- =====================
         -- CreateInput
+        -- =====================
         function Tab:CreateInput(opts)
             opts = opts or {}
             local frame = create("Frame", {Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = SelectedTheme.ElementBackground, BorderSizePixel = 0, LayoutOrder = nextOrder(), Parent = tabPage})
@@ -1399,7 +1309,9 @@ local tabPage = create("ScrollingFrame", {
             return InputValue
         end
 
+        -- =====================
         -- CreateDropdown
+        -- =====================
         function Tab:CreateDropdown(opts)
             opts = opts or {}
             local options = opts.Options or {}
@@ -1510,7 +1422,9 @@ local tabPage = create("ScrollingFrame", {
             return DropdownValue
         end
 
+        -- =====================
         -- CreateColorPicker
+        -- =====================
         function Tab:CreateColorPicker(opts)
             opts = opts or {}
             local color = opts.Color or Color3.new(1, 1, 1)
@@ -1592,7 +1506,9 @@ local tabPage = create("ScrollingFrame", {
             return ColorValue
         end
 
+        -- =====================
         -- CreateKeybind
+        -- =====================
         function Tab:CreateKeybind(opts)
             opts = opts or {}
             local currentKey = opts.CurrentKeybind or "None"
@@ -1648,6 +1564,29 @@ local tabPage = create("ScrollingFrame", {
             return KeybindValue
         end
 
+        -- =====================
+        -- CreatePreview
+        -- Drops one example of every element type with labels
+        -- =====================
+        function Tab:CreatePreview()
+            Tab:CreateSection("Element Preview")
+            Tab:CreateLabel("This is a Label", "info")
+            Tab:CreateParagraph({
+                Title = "This is a Paragraph",
+                Content = "Paragraphs are good for longer descriptions or instructions.",
+            })
+            Tab:CreateDivider()
+            Tab:CreateButton({Name = "This is a Button", Icon = "star", Callback = function() end})
+            Tab:CreateToggle({Name = "This is a Toggle", CurrentValue = false, Flag = "PreviewToggle_" .. tostring(math.random(1, 99999)), Callback = function() end})
+            Tab:CreateSlider({Name = "This is a Slider", Range = {0, 100}, Increment = 1, Suffix = "units", CurrentValue = 50, Flag = "PreviewSlider_" .. tostring(math.random(1, 99999)), Callback = function() end})
+            Tab:CreateInput({Name = "This is an Input", CurrentValue = "", PlaceholderText = "Type here...", Flag = "PreviewInput_" .. tostring(math.random(1, 99999)), Callback = function() end})
+            Tab:CreateDropdown({Name = "This is a Dropdown", Options = {"Option A", "Option B", "Option C"}, CurrentOption = {"Option A"}, MultipleOptions = false, Flag = "PreviewDropdown_" .. tostring(math.random(1, 99999)), Callback = function() end})
+            Tab:CreateColorPicker({Name = "This is a Color Picker", Color = Color3.fromRGB(120, 150, 255), Flag = "PreviewColorPicker_" .. tostring(math.random(1, 99999)), Callback = function() end})
+            Tab:CreateKeybind({Name = "This is a Keybind", CurrentKeybind = "None", HoldToInteract = false, Flag = "PreviewKeybind_" .. tostring(math.random(1, 99999)), Callback = function() end})
+            Tab:CreateDivider()
+            Tab:CreateLabel("That's every element type!", "check")
+        end
+
         return Tab
     end
 
@@ -1665,3 +1604,6 @@ local tabPage = create("ScrollingFrame", {
 end
 
 return NriculLib
+
+-- subscribe!
+print("nricullib")
