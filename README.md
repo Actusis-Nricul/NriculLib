@@ -1,4 +1,5 @@
 # ✨ NriculLib
+![image](assets/image1.png)
 
 **Your Personal Script Library - Supercharged!**
 
